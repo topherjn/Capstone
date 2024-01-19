@@ -120,6 +120,28 @@ from persons p inner join events e
 -- Stacee Valintine	1973-10-05
 -- Myriam Goddman	1991-05-30    
 
+-- show the persons with the most events
+-- i.e. the most irksome persons
+-- defined as having more than 3 events
+select p.name, count(e.person_id) Incidents
+from persons p inner join events e
+     on p.person_id = e.person_id
+group by p.person_id
+having Incidents> 3
+order by Incidents desc, p.name;
+-- results
+-- Danell Austwick	5
+-- Nadya Rumford	5
+-- Queenie Ayshford	5
+-- Sidnee Hayward	5
+-- Bambi Descroix	4
+-- Bastien Mattheus	4
+-- Clayborne Coolson	4
+-- Dorolice Barwack	4
+-- Elaina Dovinson	4
+-- Gwendolen Tidbald	4
+
+
 
 
 
