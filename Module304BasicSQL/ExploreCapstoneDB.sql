@@ -208,6 +208,87 @@ insert into events (event_id, person_id, location_id, event_date) values (3, 551
 insert into events (event_id, person_id, location_id, event_date) values (4, 837, 3, '1965-08-23');
 insert into events (event_id, person_id, location_id, event_date) values (5, 365, 2, '1928-09-01');
 
+-- Scenario: look at the tables.  What other information might we expect to collect?  
+-- Create statements to add columns, specifying apropriate data types, and relationships if possible.
+-- for people - maybe address information, phone number, dob, weight, weight, sex etc
+-- for locations - this is pretty much a lookup table, so I would not add columns
+-- for events - whatever we add should not violate 2NF (well technically 3NF since
+-- we have a surrogate key), so it would be functionally dependent
+-- on both the location and the person.  So type of event is out.  Any location data alone is out
+-- I cannot think of any good candidates here except time-based info.  Maybe something like weather
+-- or a description of the event maybe
+
+alter table persons
+add column street varchar(50),
+add column city varchar(50),
+add column state char(2),
+add column phone char(10),
+add column dob date,
+add column weight int,
+add column height int,
+add column sex char(1);
+-- reset persons data
+delete from events where person_id > 12;
+delete from persons where person_id > 12;
+-- regenerated persons data with new columns
+-- updated the addresses of the first 12 because
+-- they seem to be Marvel characters - to one of the 
+-- old addresses for Marvel in NYC
+update persons set street = '387 Park Avenue South',
+               city = 'New York',
+               state = 'NY'
+               where person_id < 13;
+
+select * from persons limit 20;
+-- 1	John Doe	missing	387 Park Avenue South	New York	NY					
+-- 2	Jane Smith	found	387 Park Avenue South	New York	NY					
+-- 3	Tony Stark	missing	387 Park Avenue South	New York	NY					
+-- 4	Bruce Banner	found	387 Park Avenue South	New York	NY					
+-- 5	Steve Warner	missing	387 Park Avenue South	New York	NY					
+-- 6	Natasha Romanoff	found	387 Park Avenue South	New York	NY					
+-- 7	Peter Parker	missing	387 Park Avenue South	New York	NY					
+-- 8	Happy Hogan	found	387 Park Avenue South	New York	NY					
+-- 9	Mary Baith	found	387 Park Avenue South	New York	NY					
+-- 10	Stephen Strange	missing	387 Park Avenue South	New York	NY					
+-- 11	Hank Pym	missing	387 Park Avenue South	New York	NY					
+-- 12	Sam Wilson	found	387 Park Avenue South	New York	NY					
+-- 13	Saunder Downey	found	14306 Monterey Avenue	Baltimore	MD	4107789096	1951-09-16	294	184	M
+-- 14	Ruttger Coulbeck	found	3 Elka Road	Cincinnati	OH	5139230129	1913-10-24	58	23	M
+-- 15	Teodorico Forstall	found	470 Warbler Terrace	Nashville	TN	6153783517	1920-05-07	836	416	M
+-- 16	Elianora Pinckney	found	8 Northport Place	Vancouver	WA	3602770247	1975-12-27	839	368	F
+-- 17	Cynthia Straughan	missing	17870 Kinsman Plaza	Alexandria	LA	3183168778	1986-03-12	126	498	M
+-- 18	Nelle Jellybrand	found	186 Waxwing Place	Des Moines	IA	5158831967	2004-08-25	374	423	F
+-- 19	Gilly Massen	found	9946 Sugar Avenue	Wilkes Barre	PA	5704187527	1978-03-21	1	94	M
+-- 20	Lettie Woodard	found	704 Bunker Hill Plaza	Pasadena	CA	6265103143	1936-02-07	788	445	F
+
+-- assinging sex
+update persons set sex = 'M' 
+where name in ('John Doe', 'Tony Stark', 'Bruce Banner', 'Steve Warner','Peter Parker', 'Happy Hogan', 'Stephen Strange', 'Hank Pym', 'Sam Wilson');
+
+update persons set sex = 'F' 
+where sex is null;
+
+-- select * from persons limit 13;1	John Doe	found	387 Park Avenue South	New York	NY					M
+-- 2	Jane Smith	missing	387 Park Avenue South	New York	NY					F
+-- 3	Tony Stark	found	387 Park Avenue South	New York	NY					M
+-- 4	Bruce Banner	found	387 Park Avenue South	New York	NY					M
+-- 5	Steve Warner	missing	387 Park Avenue South	New York	NY					M
+-- 6	Natasha Romanoff	missing	387 Park Avenue South	New York	NY					F
+-- 7	Peter Parker	found	387 Park Avenue South	New York	NY					M
+-- 8	Happy Hogan	missing	387 Park Avenue South	New York	NY					M
+-- 9	Mary Baith	missing	387 Park Avenue South	New York	NY					F
+-- 10	Stephen Strange	found	387 Park Avenue South	New York	NY					M
+-- 11	Hank Pym	missing	387 Park Avenue South	New York	NY					M
+-- 12	Sam Wilson	missing	387 Park Avenue South	New York	NY					M
+-- 13	Saunder Downey	found	14306 Monterey Avenue	Baltimore	MD	4107789096	1951-09-16	294	184	M
+										
+
+										
+
+
+										
+										
+
 
 
 	
