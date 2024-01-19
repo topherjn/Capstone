@@ -28,4 +28,21 @@ describe locations;
 describe persons;		
 -- person_id	int	NO	PRI		auto_increment
 -- name	text	NO			
--- status	text	YES				
+-- status	text	YES			
+
+-- are there any stored procedures?
+show procedure status
+where db = 'capstone';
+-- no results
+
+-- triggers?
+show triggers;
+-- no triggers
+
+-- any views?
+SHOW FULL TABLES IN capstone WHERE TABLE_TYPE LIKE 'VIEW';
+-- no views
+
+
+
+	
