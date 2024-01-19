@@ -141,6 +141,78 @@ order by Incidents desc, p.name;
 -- Elaina Dovinson	4
 -- Gwendolen Tidbald	4
 
+-- which location is the most problematic?
+select l.location_name, count(e.location_id) 'Number of Incidents'
+from locations l inner join events e 
+     on l.location_id = e.location_id
+group by l.location_id
+order by count(e.location_id) desc;
+-- results
+-- Mall	258
+-- Home	254
+-- Street	250
+-- Park	238
+
+-- which year had the most incidents
+select year(e.event_date), l.location_name,count(e.event_id)
+from `events` e inner join locations l 
+      on l.location_id = e.location_id
+group by  year(e.event_date), e.location_id
+order by count(e.event_id) desc, year(e.event_date) desc;
+-- results
+-- 2011	Mall	7
+-- 1972	Street	7
+-- 1952	Home	7
+-- 1924	Mall	7
+-- 2016	Street	6
+-- 2002	Mall	6
+-- 1998	Mall	6
+-- 1991	Home	6
+-- 1977	Park	6
+-- 1959	Street	6
+
+--  - Scenario: Add 5 new records to each table (yea, just make stuff up that matches the existing data.
+-- locations
+-- Cinema
+-- Restaurant
+-- Road
+-- Store
+-- Festival
+insert into locations (location_name) values ('Cinema');
+insert into locations (location_name) values ('Restaurant');
+insert into locations (location_name) values ('Road');
+insert into locations (location_name) values ('Store');
+insert into locations (location_name) values ('Festival');
+select * from locations;
+-- 1	Park
+-- 2	Street
+-- 3	Mall
+-- 4	Home
+-- 5	Cinema
+-- 6	Restaurant
+-- 7	Road
+-- 8	Store
+-- 9	Festival
+
+-- persons
+insert into persons (person_id, name, status) values (1, 'Birch Lindenstrauss', 'missing');
+insert into persons (person_id, name, status) values (2, 'Victoir Spores', 'missing');
+insert into persons (person_id, name, status) values (3, 'Joeann Roderigo', 'missing');
+insert into persons (person_id, name, status) values (4, 'Joel Dupey', 'found');
+insert into persons (person_id, name, status) values (5, 'Libbey Roblin', 'missing');
+
+-- events
+insert into events (event_id, person_id, location_id, event_date) values (1, 370, 4, '1964-12-20');
+insert into events (event_id, person_id, location_id, event_date) values (2, 535, 2, '1973-12-07');
+insert into events (event_id, person_id, location_id, event_date) values (3, 551, 2, '1961-07-21');
+insert into events (event_id, person_id, location_id, event_date) values (4, 837, 3, '1965-08-23');
+insert into events (event_id, person_id, location_id, event_date) values (5, 365, 2, '1928-09-01');
+
+
+
+	
+
+
 
 
 
