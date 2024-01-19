@@ -81,6 +81,47 @@ select * from events limit 10;
 -- might need to modify later - for one
 -- thing we have over 1 century of dates
 
+-- show the names and statuses, event dates, and locations
+-- for all persons (results set to limit 10)
+select p.name, p.status, e.event_date, l.location_name
+from persons p inner join events e on 
+     p.person_id = e.person_id inner join
+     locations l on l.location_id = e.location_id
+     order by p.name, e.event_date desc;
+     
+-- results
+-- Abram Dumbelton	found	1984-08-28	Home
+-- Abramo Lidgley	found	1996-05-01	Home
+-- Abran Setterington	found	1948-02-16	Home
+-- Addie Nuton	missing	2017-11-14	Home
+-- Adele Gribbon	missing	1972-03-23	Street
+-- Adele Gribbon	missing	1952-01-27	Park
+-- Adena MacCoughen	missing	1997-06-17	Mall
+-- Agace Corns	found	1992-12-08	Mall
+-- Aida Tomaskunas	missing	1911-03-25	Home
+-- Aigneis Simeone	found	1950-07-28	Home
+
+-- show names and dates for people missing from home
+select p.name, e.event_date
+from persons p inner join events e
+     on p.person_id = e.person_id
+     where e.location_id = (select location_id
+                            from locations
+                            where location_name = 'Home');
+-- results
+-- Bruce Banner	2023-04-01
+-- Bastien Schole	1921-09-08
+-- Jamey Pentycost	2000-07-10
+-- Ida Jillett	1997-02-19
+-- Glynda Voase	1962-05-20
+-- Virgie Lowcock	1952-09-26
+-- Daveta Bramstom	1991-02-01
+-- Wallache Kinkead	1957-01-17
+-- Stacee Valintine	1973-10-05
+-- Myriam Goddman	1991-05-30    
+
+
+
 
 
 			
