@@ -372,6 +372,7 @@ create table closed_cases (
     CONSTRAINT `closed_fk1` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`)
 );
 
+
 	
 
 
