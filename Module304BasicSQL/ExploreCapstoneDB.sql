@@ -364,6 +364,7 @@ select num_missing(); -- 110 in my db
 -- because of normalization - can get to it through event_id
 -- there might be more than one event per person, but it's not 
 -- obvious, perhaps log all events in separate records?
+drop table if exists closed_cases;
 create table closed_cases (
     closed_case_id int primary key auto_increment,
     event_id int,
