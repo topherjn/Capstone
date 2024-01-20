@@ -357,23 +357,52 @@ DELIMITER ;
 select num_missing(); -- 110 in my db
 										
 -- trigger to archive solved cases
--- when status is changed to found 
--- then event id and found date (curdate) are logged
--- just for the bonus for now - will drop later if I need to
--- would be bad form to put person and location data in here
--- because of normalization - can get to it through event_id
--- there might be more than one event per person, but it's not 
--- obvious, perhaps log all events in separate records?
+-- based on person status going from
+-- missing to found
 drop table if exists closed_cases;
 create table closed_cases (
     closed_case_id int primary key auto_increment,
-    event_id int,
-    closed_date date,
-    CONSTRAINT `closed_fk1` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`)
+    person_id int,
+    closed_date date default (curdate()),
+    CONSTRAINT `closed_fk1` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`)
 );
 
+-- trigger
+drop trigger if exists close_case
+delimiter $$
+create trigger close_case
+after update on persons
+for each row
+begin
+    if old.status = 'missing' and new.status = 'found' then
+        insert into closed_cases (person_id) values (new.person_id);
+    end if;
+end$$
 
-	
+delimiter ;
+
+-- test
+update persons set status = 'found' where person_id = 2;
+
+select * from closed_cases;
+-- closed_case_i   person_id  date
+-- 1	2	2024-01-20
+
+-- views
+create view closed_case_info as
+select p.name "Person's Name", concat(street, ' ', city, ' ', state) "Address", sex Sex, event_date 'Open Date', closed_date 'Closed Date'
+from persons p inner join closed_cases c
+     on p.person_id = c.person_id inner join
+     events e on e.person_id = p.person_id;
+
+--  test
+select *
+from closed_case_info;
+
+-- results
+-- Jane Smith	387 Park Avenue South New York NY	F	2023-02-01	2024-01-20
+
+
 
 
 
