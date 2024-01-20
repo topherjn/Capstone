@@ -299,7 +299,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `new_person_incident`(new_person_nam
                                  weight int,
                                  height int,
                                  sex char(1),
-                                 location text,
+                                 place text,
                                  incident_date date)
 BEGIN
 	declare new_person_id int;
@@ -314,14 +314,14 @@ BEGIN
 FROM
     persons INTO new_person_id;
 SELECT 
-    location_id
+    l.location_id
 FROM
-    locations
+    locations l
 WHERE
-    location = location_name INTO this_location_id;
+    l.location_name = place INTO this_location_id;
     
     insert into events (person_id, location_id, event_date) 
-                values (new_person_id, location_id, incident_date);
+                values (new_person_id, this_location_id, incident_date);
 
 END$$
 
