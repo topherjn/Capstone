@@ -281,6 +281,11 @@ where sex is null;
 -- 11	Hank Pym	missing	387 Park Avenue South	New York	NY					M
 -- 12	Sam Wilson	missing	387 Park Avenue South	New York	NY					M
 -- 13	Saunder Downey	found	14306 Monterey Avenue	Baltimore	MD	4107789096	1951-09-16	294	184	M
+
+-- seems like searches on dates would be common
+create index idx_event_dates on events (event_date);
+-- and people's names and status
+create fulltext index idx_names on persons (name, status) ;
 										
 
 										
