@@ -330,11 +330,46 @@ DELIMITER ;
 -- test it
 call new_person_incident('Tav', '1313 Mockingbird Lane', 'Boston', 'MA', '8678675309', '1776-07-04', 200, 76, 'M', 'Mall', '2019-04-04');
 
+-- function to return the current number missing
+USE `capstone`;
+DROP function IF EXISTS `num_missing`;
 
+DELIMITER $$
+USE `capstone`$$
+CREATE FUNCTION `num_missing` ()
+RETURNS INTEGER
+deterministic
+BEGIN
+	DECLARE nmissing INTEGER;
+    
+SELECT 
+    COUNT(*)
+FROM
+    persons
+WHERE
+    status = 'missing' INTO nmissing;
+    
+RETURN nmissing;
+END$$
+
+DELIMITER ;
+
+select num_missing(); -- 110 in my db
 										
-										
-
-
+-- trigger to archive solved cases
+-- when status is changed to found 
+-- then event id and found date (curdate) are logged
+-- just for the bonus for now - will drop later if I need to
+-- would be bad form to put person and location data in here
+-- because of normalization - can get to it through event_id
+-- there might be more than one event per person, but it's not 
+-- obvious, perhaps log all events in separate records?
+create table closed_cases (
+    closed_case_id int primary key auto_increment,
+    event_id int,
+    closed_date date,
+    CONSTRAINT `closed_fk1` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`)
+);
 
 	
 
