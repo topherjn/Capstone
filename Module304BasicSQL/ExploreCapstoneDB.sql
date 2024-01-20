@@ -287,8 +287,48 @@ create index idx_event_dates on events (event_date);
 -- and people's names and status
 create fulltext index idx_names on persons (name, status) ;
 										
+-- procedure to add a new person to db and an incident for them
+DROP PROCEDURE IF EXISTS new_person_incident;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `new_person_incident`(new_person_name text,
+                                 streetname varchar(50),
+                                 cityname varchar(50),
+                                 statename varchar(50),
+                                 phonedigits char(10),
+                                 bdate date,
+                                 weight int,
+                                 height int,
+                                 sex char(1),
+                                 location text,
+                                 incident_date date)
+BEGIN
+	declare new_person_id int;
+    declare this_location_id int;
+    
+	insert into persons (name, status, street, city, state, phone, dob, weight, height, sex)
+			    values (new_person_name, 'missing', streetname, cityname, statename,
+                        phonedigits, bdate, weight, height, sex);
+                        
+	SELECT 
+    MAX(person_id)
+FROM
+    persons INTO new_person_id;
+SELECT 
+    location_id
+FROM
+    locations
+WHERE
+    location = location_name INTO this_location_id;
+    
+    insert into events (person_id, location_id, event_date) 
+                values (new_person_id, location_id, incident_date);
 
-										
+END$$
+
+DELIMITER ;
+
+-- test it
+call new_person_incident('Tav', '1313 Mockingbird Lane', 'Boston', 'MA', '8678675309', '1776-07-04', 200, 76, 'M', 'Mall', '2019-04-04');
 
 
 										
