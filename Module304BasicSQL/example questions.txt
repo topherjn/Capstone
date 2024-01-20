@@ -1,0 +1,35 @@
+Create a Jira Sprint for this bonus activity
+"304 / 400 Bonus Questions"  
+Refer to the MySQL topics list for additional skills learned that you might be able to demonstrate.
+
+### Scenarios for Beginners Learning MySQL:
+
+1. **Exploring the Database Schema**: What things should we look into to explore and learn the database and its various objects.
+   - Sample Scenario: List all tables in this database and examine the structure.  what else would we like to know?
+
+2. **Basic Data Querying**:
+   - Create some basic single table data queries
+   - Create some complex querie susing joins
+   - Create some complex queries using sub queries.
+   - Creaet some queries with the HAVING clause
+   - Create some queries with sorts and limits and such.
+   - Create some queries using agregates
+   - Create some queries using conditional operators
+   - Create some queries using group by clause
+
+3. **Inserting Data**:
+   - Scenario: Add 5 new records to each table (yea, just make stuff up that matches the existing data.
+   - Scenario: look at the tables.  What other information might we expect to collect?  Create statements to add columns, specifying apropriate data types, and relationships if possible.
+
+4. **Updating Data**:
+   - Scenario: Create some update statements to each table that rely on where clauses (yea, just make stuff up that matches the existing data.
+
+3. **Index Management**:
+   - Scenario: Analyze the database indexes and add appropriate indexes to optimize queries.
+
+Create a Stored Procedures  and test it
+Create a Stored Functionsand test it
+Create a Trigger and test it
+
+
+Create some views
