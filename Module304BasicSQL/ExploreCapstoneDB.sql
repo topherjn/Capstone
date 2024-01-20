@@ -402,9 +402,19 @@ from closed_case_info;
 -- results
 -- Jane Smith	387 Park Avenue South New York NY	F	2023-02-01	2024-01-20
 
+create view problematic_locations as
+select l.location_name, count(e.location_id) 'Number of Incidents'
+from locations l inner join events e 
+     on l.location_id = e.location_id
+group by l.location_id
+order by count(e.location_id) desc;
 
-
-
+-- test 
+select * from problematic_locations;
+-- Street	7
+-- Mall	5
+-- Park	3
+-- Home	1
 
 
 
