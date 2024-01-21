@@ -18,5 +18,5 @@ create table evidence_changes(
 );
 
 -- dummy data
-insert into evidence (description) values ('Document A'), ('Photograph B'), ('Audio Recording C');
+insert into evidence (description) values ('Video Footage D');
 
