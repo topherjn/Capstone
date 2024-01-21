@@ -8,4 +8,11 @@ create table evidence (
     description TEXT
 );
 
-
+-- create evidence changes table
+create table evidence_changes(
+    change_id integer primary key auto_increment,
+    evidence_id integer,
+    action varchar(10),
+    change_date TIMESTAMP,
+    foreign key (evidence_id) references evidence (evidence_id)
+);
