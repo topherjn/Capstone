@@ -16,3 +16,7 @@ create table evidence_changes(
     change_date TIMESTAMP,
     foreign key (evidence_id) references evidence (evidence_id)
 );
+
+-- dummy data
+insert into evidence (description) values ('Document A'), ('Photograph B'), ('Audio Recording C');
+
