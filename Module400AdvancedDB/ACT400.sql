@@ -21,14 +21,17 @@ create table evidence_changes(
 insert into evidence (description) values ('Video Footage D');
 
 -- create trigger for tracking changes to evidence
+drop trigger if exists track_evidence_changes;
 delimiter //
 
 create trigger track_evidence_changes
 after insert on evidence
 for each row
 begin
-    insert into evidence_changes(evidence_id, action, change_datee)
+    insert into evidence_changes(evidence_id, action, change_date)
             values (new.evidence_id, 'INSERT', NOW());
 end;//
 
 delimiter ;
+
+insert into evidence (description) values ('Test Trigger');
