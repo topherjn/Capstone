@@ -11,6 +11,9 @@ This module forces each line into a JSON format and then creates
 a list of data items and returns that list to the caller.
 """
 
+# Input: CDW JSON filename
+# Returns: List of dictionaries containting JSON objects
+
 data_folder = 'data'
 
 def get_json_data_as_list(data_file):
@@ -23,16 +26,15 @@ def get_json_data_as_list(data_file):
         try:
             # should open any known cdw
             with open(f"{data_folder}/{data_file}",'r') as fr:
-                #dictionary for each line
-                json_data_item = {}
+                
+                # read the first line
                 data = fr.readline()
 
                 # read in all the lines i.e. all the data items
                 while data:
-                    json_data_item[base_key] = json.loads(data)
+                    json_data_item = json.loads(data)
                     json_data_list.append(json_data_item)
                     data = fr.readline()
-                    json_data_item = {}
         except Exception as ex:
             print(ex)
 
