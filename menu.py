@@ -2,11 +2,16 @@ import calendar as cal
 
 print(cal.calendar(2024))
 
-
-
 # Req-2.1
 
 # 2.1.1 - Prompt the user for a zip code, provide contextual cues for valid input, and verify it is in the correct format.
+def get_ZIP(code):
+    
+
+
+
+
+
 
 # 5 or 9?
 
