@@ -1,10 +1,14 @@
 import calendar as cal
 import cdw_data_parser as cdw
 
-data = cdw.get_json_data_as_list('cdw_sapp_credit.json')
-print(data)
+data = cdw.get_json_data_as_list('cdw_sapp_custmer.json')
 
-print(cal.calendar(2024))
+
+customer_zips = [item['CUST_ZIP'] for item in data]
+
+customer_zip = input("Give me a ZIP: ")
+if customer_zip not in customer_zips:
+    print("Invalid zip")
 
 # Req-2.1
 
