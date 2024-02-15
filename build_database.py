@@ -1,32 +1,26 @@
-import dbsecrets
-import mysql.connector
+from dbadapter import DataAdapter
+import cdw_data_reader as dr
+import filenames as fn
 
-# constants for name strings
-DATABASE_NAME = "creditcard_capstone"
-BRANCH_TABLE = "CDW_SAPP_BRANCH"
-CC_TABLE = "CDW_SAPP_CREDIT_CARD"
-# CUSTOMER_TABLE = "CDW_SAPP_CUSTOMER"
-CUSTOMER_TABLE = "customers"
+def build_database():
+    # create data adapter
+    data_adapter = DataAdapter()
 
-# set up db connection
-# db secrets might need to change
-# ask team for name of module
-try:
-    connection = mysql.connector.connect(
-        host="localhost",           
-        user=dbsecrets.mysql_username,
-        password=dbsecrets.mysql_password      
-    )
-except mysql.connector.Error as ex:
-    print(ex)
+    # create database
+    data_adapter.create_database()
 
-# verify connection
-if connection.is_connected():
-    print("Connected to MySQL database!")
-else:
-    print("Failed to connect to MySQL database.")
+    # create tables
+    data_adapter.create_tables()
 
-# close the connection
-connection.close()
+    # load data
+
+# get data first as pandas dataframes
+customer_data = dr.get_dataframe(fn.CUSTOMER_FILE)
+branch_data = dr.get_dataframe(fn.BRANCH_FILE)
+transation_data = dr.get_dataframe(fn.CREDIT_FILE)
+
+
+# build database
+build_database()
 
 

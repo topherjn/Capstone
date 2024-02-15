@@ -1,4 +1,4 @@
-from dboperator import DataAdapter as DataAdapter
+from dbadapter import DataAdapter as DataAdapter
 import mysql.connector
 import pandas as pd
 

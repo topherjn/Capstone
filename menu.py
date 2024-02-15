@@ -19,7 +19,7 @@ def get_integer(prompt):
         print(f"{value} invalid: Try again.")
         return get_integer(prompt)
 
-def main():
+def do_menu():
     data = cdw.get_dataframe(fn.CUSTOMER_FILE)
 
     print(data.head())
@@ -80,5 +80,5 @@ def main():
     # 4) Used to display the transactions made by a customer between two dates. Order by year, month, and day in descending order.
 
 if __name__ == "__main__":
-    main()
+    do_menu()
         
