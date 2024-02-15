@@ -1,7 +1,14 @@
 import calendar as cal
 import cdw_data_reader as cdw
 import filenames as fn
-import os
+from os import system, name
+
+def clear_screen():
+    if name == 'nt':
+        system('cls')
+    else:
+        system('clear')
+
 
 def get_integer(prompt):
     
@@ -21,14 +28,14 @@ def main():
     # Req-2.1
 
     # 2.1.1 - Prompt the user for a zip code, provide contextual cues for valid input, and verify it is in the correct format.
-    os.system("cls")
+    clear_screen()
     zip_code = input("Enter a 5-digit ZIP code: ")
     
     while len(zip_code) != 5 or not zip_code.isnumeric():
         zip_code = input("Incorrect format. Enter a 5-digit ZIP code: ")
 
     # 2.1.2- Ask for a month and year,  and provide contextual cues for valid input and verify it is in the correct format.
-    os.system("cls")
+    clear_screen()
     print(f"Querying on ZIP code {zip_code}: ")
     months = list(cal.month_name)
     for i,m in enumerate(months):
@@ -39,7 +46,7 @@ def main():
     while month not in range(1,13):
         month = int(input("Invalid month.  Enter the menu number for the month you want to query: "))
 
-    os.system("cls")
+    clear_screen()
     year = get_integer(f"{months[month]} of which year? ")
 
     while year != 2018:
