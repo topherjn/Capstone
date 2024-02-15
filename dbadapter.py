@@ -39,3 +39,6 @@ class DataAdapter:
         cursor.execute(command)
         results = cursor.fetchall()
         return results
+    
+    def get_specified_transactions(self,zip_code, month, year):
+        return zip_code, month, year
