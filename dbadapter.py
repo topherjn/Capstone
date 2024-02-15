@@ -16,8 +16,7 @@ class DataAdapter:
             mysql.connector.connect(
                 host="localhost",           
                 user=secrets.mysql_username,
-                password=secrets.mysql_password
-                )
+                password=secrets.mysql_password)
         self.database_name = DATABASE_NAME
 
     def create_database(self):
@@ -35,7 +34,7 @@ class DataAdapter:
         pass
 
     def get_all_customers(self):
-        command = f"SELECT * FROM {db.CUSTOMER_TABLE}"
+        command = f"SELECT * FROM {CUSTOMER_TABLE}"
         cursor = self.connection.cursor(buffered=True)
         cursor.execute(command)
         results = cursor.fetchall()
