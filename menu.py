@@ -1,7 +1,7 @@
 import calendar as cal
 import cdw_data_reader as cdw
 
-data = cdw.get_json_data_as_list('cdw_sapp_custmer.json')
+data = cdw.get_dataframe('cdw_sapp_custmer.json')
 
 
 customer_zips = [item['CUST_ZIP'] for item in data]
