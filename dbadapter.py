@@ -51,8 +51,8 @@ class DataAdapter:
 
     # 2) Used to modify the existing account details of a customer.
     # get all details in a data object, change, then save whole thing back
-    def update_customer_details(self,snn):
-        pass
+    def update_customer_details(self,ssn):
+        details = self.get_customer_details(self, ssn)
 
     # 3) Used to generate a monthly bill for a credit card number for a given month and year. 
     # Hint: What does YOUR monthly credit card bill look like?  What structural components 
