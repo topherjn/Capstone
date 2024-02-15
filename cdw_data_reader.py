@@ -20,5 +20,5 @@ if __name__ == "__main__":
     #https://stackoverflow.com/questions/33137686/python-loading-zip-codes-into-a-dataframe-as-strings
     branch_df['BRANCH_ZIP'] = branch_df['BRANCH_ZIP'].astype(str).str.zfill(5)
 
-    print(branch_df)
+    print(credit_df)
 
