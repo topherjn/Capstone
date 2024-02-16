@@ -38,6 +38,7 @@ class DataAdapter:
         cursor = self.connection.cursor(buffered=True)
         cursor.execute(command)
         results = cursor.fetchall()
+        
         return results
 
     # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the specified zip code for the given month and year.

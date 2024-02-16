@@ -14,13 +14,12 @@ def build_database():
 
     # load data
 
-# get data first as pandas dataframes
-customer_data = dr.get_dataframe(fn.CUSTOMER_FILE)
-branch_data = dr.get_dataframe(fn.BRANCH_FILE)
-transation_data = dr.get_dataframe(fn.CREDIT_FILE)
+if __name__=="__main__":
+    # get data first as pandas dataframes
+    customer_data = dr.get_dataframe(fn.CUSTOMER_FILE)
+    branch_data = dr.get_dataframe(fn.BRANCH_FILE)
+    transation_data = dr.get_dataframe(fn.CREDIT_FILE)
 
 
-# build database
-build_database()
-
-
+    # build database
+    build_database()
