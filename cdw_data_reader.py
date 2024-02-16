@@ -20,5 +20,6 @@ if __name__ == "__main__":
     #https://stackoverflow.com/questions/33137686/python-loading-zip-codes-into-a-dataframe-as-strings
     branch_df['BRANCH_ZIP'] = branch_df['BRANCH_ZIP'].astype(str).str.zfill(5)
 
-    print(customer_df)
+    # how to do a search by SSN
+    print(customer_df[customer_df['SSN']==123454047])
 
