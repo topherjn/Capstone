@@ -1,14 +1,20 @@
-import pandas as pd
+
 import numpy as np
 import filenames as fn
+import findspark
+findspark.init()
+from pyspark.sql import SparkSession
+
+JSON_FORMAT = """org.apache.spark.sql.json"""
 
 def get_dataframe(data_file):
 
     data_folder = 'data'
 
     # one JSON object per line in file
-    df = pd.read_json(f"{data_folder}/{data_file}", lines=True)
-    
+    spark = SparkSession.builder.appName('capston').getOrCreate()
+
+    df = spark.read.format(JSON_FORMAT).load(f"{data_folder}/{data_file}")
     return df
 
 if __name__ == "__main__":
@@ -17,9 +23,5 @@ if __name__ == "__main__":
     credit_df = get_dataframe(fn.CREDIT_FILE)
     customer_df = get_dataframe(fn.CUSTOMER_FILE)
 
-    #https://stackoverflow.com/questions/33137686/python-loading-zip-codes-into-a-dataframe-as-strings
-    branch_df['BRANCH_ZIP'] = branch_df['BRANCH_ZIP'].astype(str).str.zfill(5)
-
-    # how to do a search by SSN
-    print(customer_df[customer_df['SSN']==123454047])
+    customer_df.show()
 
