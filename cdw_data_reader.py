@@ -1,6 +1,6 @@
 
 import numpy as np
-import filenames as fn
+import constants as const
 import findspark
 findspark.init()
 from pyspark.sql import SparkSession
@@ -19,9 +19,9 @@ def get_dataframe(data_file):
 
 if __name__ == "__main__":
 
-    branch_df = get_dataframe(fn.BRANCH_FILE)
-    credit_df = get_dataframe(fn.CREDIT_FILE)
-    customer_df = get_dataframe(fn.CUSTOMER_FILE)
+    branch_df = get_dataframe(const.BRANCH_FILE)
+    credit_df = get_dataframe(const.CREDIT_FILE)
+    customer_df = get_dataframe(const.CUSTOMER_FILE)
 
     customer_df.show()
 
