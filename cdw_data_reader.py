@@ -12,7 +12,7 @@ def get_dataframe(data_file):
     data_folder = 'data'
 
     # one JSON object per line in file
-    spark = SparkSession.builder.appName('capston').getOrCreate()
+    spark = SparkSession.builder.appName('capstone json').getOrCreate()
 
     df = spark.read.format(JSON_FORMAT).load(f"{data_folder}/{data_file}")
     return df

@@ -13,4 +13,4 @@ CUSTOMER_TABLE = "CDW_SAPP_CUSTOMER"
 
 # spark constants
 DB_DRIVER = "com.mysql.cj.jdbc.Driver"
-DB_URL = "jdbc:mysql://localhost:3306/classicmodels"
+DB_URL = "jdbc:mysql://localhost:3306/"

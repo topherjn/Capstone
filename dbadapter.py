@@ -1,25 +1,38 @@
+import constants as const
 import dbsecrets as secrets
 import findspark
 findspark.init()
 
+from pyspark.sql import SparkSession
 
 
 class DataAdapter:
     def __init__(self):
-    #     self.connection = \
-    #         mysql.connector.connect(
-    #             host="localhost",           
-    #             user=secrets.mysql_username,
-    #             password=secrets.mysql_password)
-    #     self.database_name = DATABASE_NAME
-        pass
+
+        self.connection = SparkSession \
+                          .builder \
+                          .appName("capstone") \
+                          .master("local[*]") \
+                          .getOrCreate()
+        
+        self.connection.sparkContext.setLogLevel("ERROR")
+        
+        self.database_name = const.DATABASE_NAME
+
+    def get_config_info(self):
+        config=self.connection.sparkContext.getConf().getAll()
+        for item in config:
+            print(item)
 
     def create_database(self):
         # cursor = self.connection.cursor(buffered=True)
         # command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
         # cursor.execute(command)
         # cursor.close()
-        pass
+        command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
+
+       
+        
 
     def create_tables(self):
         # create customers table
@@ -34,8 +47,15 @@ class DataAdapter:
         # cursor = self.connection.cursor(buffered=True)
         # cursor.execute(command)
         # results = cursor.fetchall()
+        query="(select * from customers) as cust"
+
+        df = self.connection.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+                                     user="root",\
+                                     password="password",\
+                                     url="jdbc:mysql://localhost:3306/classicmodels",\
+                                     dbtable=query).load()
         
-        pass
+        df.show()
 
     # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the specified zip code for the given month and year.
     # 2.1.4 - Sort the transactions by day in descending order.    
