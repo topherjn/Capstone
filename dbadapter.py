@@ -29,8 +29,14 @@ class DataAdapter:
         # command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
         # cursor.execute(command)
         # cursor.close()
-        command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
+        # command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}".format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+        #                              user="root",\
+        #                              password="password",\
+        #                              url="jdbc:mysql://localhost:3306/classicmodels")
 
+
+        # self.connection.sql
+        pass
        
         
 

@@ -1,3 +1,4 @@
+import dbsecrets as secrets
 # make file names easier
 BRANCH_FILE = "cdw_sapp_branch.json"
 CREDIT_FILE = "cdw_sapp_credit.json"
@@ -13,4 +14,4 @@ CUSTOMER_TABLE = "CDW_SAPP_CUSTOMER"
 
 # spark constants
 DB_DRIVER = "com.mysql.cj.jdbc.Driver"
-DB_URL = "jdbc:mysql://localhost:3306/"
+DB_URL = f"jdbc:mysql://localhost:3306/?user={secrets.mysql_username}&password={secrets.mysql_password}"
