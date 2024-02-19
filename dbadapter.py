@@ -2,19 +2,7 @@ import dbsecrets as secrets
 import findspark
 findspark.init()
 
-# constants for name strings
-DATABASE_NAME = "creditcard_capstone"
-USER = secrets.mysql_username
-PWD = secrets.mysql_password
 
-# table name constants
-BRANCH_TABLE = "CDW_SAPP_BRANCH"
-CC_TABLE = "CDW_SAPP_CREDIT_CARD"
-CUSTOMER_TABLE = "CDW_SAPP_CUSTOMER"
-
-# spark constants
-DB_DRIVER = "com.mysql.cj.jdbc.Driver"
-DB_URL = "jdbc:mysql://localhost:3306/classicmodels"
 
 class DataAdapter:
     def __init__(self):
