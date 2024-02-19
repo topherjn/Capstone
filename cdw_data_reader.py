@@ -1,5 +1,3 @@
-
-import numpy as np
 import constants as const
 import findspark
 findspark.init()
@@ -15,6 +13,7 @@ def get_dataframe(data_file):
     spark = SparkSession.builder.appName('capstone json').getOrCreate()
 
     df = spark.read.format(JSON_FORMAT).load(f"{data_folder}/{data_file}")
+
     return df
 
 if __name__ == "__main__":
