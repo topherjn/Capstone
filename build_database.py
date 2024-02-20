@@ -1,6 +1,7 @@
 import constants as const
 from dbadapter import DataAdapter
 import cdw_data_reader as cdr
+import load_loan_data as lld
 
 
 def build_database():
@@ -25,6 +26,7 @@ def build_database():
     df = cdr.get_dataframe((const.CREDIT_FILE))
     data_adapter.create_table(df,const.CC_TABLE)
 
+    # online json
 
 if __name__ == "__main__":
     # get data first as pandas dataframes

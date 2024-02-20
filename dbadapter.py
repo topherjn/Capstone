@@ -59,12 +59,6 @@ class DataAdapter:
 
 
     def get_all_customers(self):
-        # command = f"SELECT * FROM {CUSTOMER_TABLE}"
-        # cursor = self.connection.cursor(buffered=True)
-        # cursor.execute(command)
-        # results = cursor.fetchall()
-        query = "(select * from customers) as cust"
-
         df = (self.session.read
               .format("jdbc")
               .option("url", self.session_properties["host"])
