@@ -1,12 +1,13 @@
 import constants as const
+from pyspark.sql import SparkSession
 import findspark
 findspark.init()
-from pyspark.sql import SparkSession
+
 
 JSON_FORMAT = """org.apache.spark.sql.json"""
 
-def get_dataframe(data_file):
 
+def get_dataframe(data_file):
     data_folder = 'data'
 
     # one JSON object per line in file
@@ -16,11 +17,10 @@ def get_dataframe(data_file):
 
     return df
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     branch_df = get_dataframe(const.BRANCH_FILE)
     credit_df = get_dataframe(const.CREDIT_FILE)
     customer_df = get_dataframe(const.CUSTOMER_FILE)
 
     customer_df.show()
-

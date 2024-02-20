@@ -1,34 +1,39 @@
+import findspark
+import mysql.connector
 import constants as const
 import dbsecrets as secrets
-import findspark
-
 findspark.init()
-
 from pyspark.sql import SparkSession
-
 
 class DataAdapter:
     def __init__(self):
-        self.connection_properties={
+
+        self.conn = mysql.connector.connect(
+            host="localhost",
+            user=secrets.mysql_username,
+            passwd=secrets.mysql_password,
+        )
+
+        self.session_properties = {
             'user': secrets.mysql_username,
             'password': secrets.mysql_password,
             'host': const.DB_URL,
             'driver': 'com.mysql.jdbc.Driver',
-            'database': "classicmodels"
+            'database': const.DATABASE_NAME
         }
 
-        self.connection = SparkSession \
+        self.session = SparkSession \
             .builder \
             .appName("capstone") \
             .master("local[*]") \
             .getOrCreate()
 
-        self.connection.sparkContext.setLogLevel("ERROR")
+        self.session.sparkContext.setLogLevel("ERROR")
 
         self.database_name = const.DATABASE_NAME
 
     def get_config_info(self):
-        config = self.connection.sparkContext.getConf().getAll()
+        config = self.session.sparkContext.getConf().getAll()
         for item in config:
             print(item)
 
@@ -38,18 +43,20 @@ class DataAdapter:
         # cursor.execute(command)
         # cursor.close()
         command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
-        self.connection.sparkContext.getOrCreate()
+        cursor = self.conn.cursor()
+        # Create database
+        cursor.execute(command)
 
+    def create_table(self,df,table_name):
+        print(f"{const.DB_URL}/{self.database_name}")
+        df.write.format("jdbc") \
+            .mode("overwrite") \
+            .option("url", f"{const.DB_URL}/{self.database_name}") \
+            .option("dbtable", table_name) \
+            .option("user", secrets.mysql_username) \
+            .option("password", secrets.mysql_password) \
+            .save()
 
-
-
-    def create_tables(self):
-        # create customers table
-
-        # create branches table
-
-        # create transactions table
-        pass
 
     def get_all_customers(self):
         # command = f"SELECT * FROM {CUSTOMER_TABLE}"
@@ -58,18 +65,19 @@ class DataAdapter:
         # results = cursor.fetchall()
         query = "(select * from customers) as cust"
 
-        df = (self.connection.read
+        df = (self.session.read
               .format("jdbc")
-              .option("url", self.connection_properties["host"])
-              .option("dbname", "classicmodels").
-              option("user", self.connection_properties["user"])
-              .option("password", self.connection_properties["password"])
+              .option("url", self.session_properties["host"])
+              .option("dbname", "classicmodels")
+              .option("user", self.session_properties["user"])
+              .option("password", self.session_properties["password"])
               .option("dbtable", "customers")
               .load())
 
         df.show()
 
-    # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the specified zip code for the given month and year.
+    # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the
+    # specified zip code for the given month and year.
     # 2.1.4 - Sort the transactions by day in descending order.    
     def get_specified_transactions(self, zip_code, month, year):
         return zip_code, month, year

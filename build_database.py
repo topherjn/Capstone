@@ -1,20 +1,29 @@
+import constants as const
 from dbadapter import DataAdapter
+import cdw_data_reader as cdr
 
 
 def build_database():
     # create data adapter
     data_adapter = DataAdapter()
 
-    data_adapter.get_config_info()
+    # data_adapter.get_config_info()
 
     # # create database
     data_adapter.create_database()
 
     # # create tables
-    # data_adapter.create_tables()
+    # customers
+    df = cdr.get_dataframe(const.CUSTOMER_FILE)
+    data_adapter.create_table(df,const.CUSTOMER_TABLE)
 
-    # # load data
-    data_adapter.get_all_customers()
+    # branches
+    df = cdr.get_dataframe(const.BRANCH_FILE)
+    data_adapter.create_table(df,const.BRANCH_TABLE)
+
+    # transactions
+    df = cdr.get_dataframe((const.CREDIT_FILE))
+    data_adapter.create_table(df,const.CC_TABLE)
 
 
 if __name__ == "__main__":
