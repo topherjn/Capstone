@@ -18,18 +18,18 @@ def build_database():
     df = cdr.get_dataframe(const.CUSTOMER_FILE)
     data_adapter.create_table(df,const.CUSTOMER_TABLE)
 
-    # branches
+    # # branches
     df = cdr.get_dataframe(const.BRANCH_FILE)
     data_adapter.create_table(df,const.BRANCH_TABLE)
 
-    # transactions
-    df = cdr.get_dataframe((const.CREDIT_FILE))
+    # # transactions
+    df = cdr.get_dataframe(const.CREDIT_FILE)
     data_adapter.create_table(df,const.CC_TABLE)
 
     # online json
 
+
 if __name__ == "__main__":
-    # get data first as pandas dataframes
     # customer_data = dr.get_dataframe(const.CUSTOMER_FILE)
     # branch_data = dr.get_dataframe(const.BRANCH_FILE)
     # translation_data = dr.get_dataframe(const.CREDIT_FILE)

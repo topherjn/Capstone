@@ -1,13 +1,14 @@
 import findspark
+from pyspark.sql import SparkSession
 import mysql.connector
 import constants as const
 import dbsecrets as secrets
+
 findspark.init()
-from pyspark.sql import SparkSession
+
 
 class DataAdapter:
     def __init__(self):
-
         self.conn = mysql.connector.connect(
             host="localhost",
             user=secrets.mysql_username,
@@ -47,17 +48,20 @@ class DataAdapter:
         # Create database
         cursor.execute(command)
 
-    def create_table(self,df,table_name):
+    # create a mysql table from a Spark dataframe
+    def create_table(self, df, table_name):
         print(f"{const.DB_URL}/{self.database_name}")
         df.write.format("jdbc") \
             .mode("overwrite") \
             .option("url", f"{const.DB_URL}/{self.database_name}") \
             .option("dbtable", table_name) \
             .option("user", secrets.mysql_username) \
+            .option("driver", "com.mysql.jdbc.Driver") \
             .option("password", secrets.mysql_password) \
             .save()
 
-
+    # return a Spark dataframe from a mysql table
+    # for customers in classicmodels
     def get_all_customers(self):
         df = (self.session.read
               .format("jdbc")
@@ -74,7 +78,7 @@ class DataAdapter:
     # specified zip code for the given month and year.
     # 2.1.4 - Sort the transactions by day in descending order.    
     def get_specified_transactions(self, zip_code, month, year):
-        return zip_code, month, year
+        pass
 
     # 1) Used to check the existing account details of a customer.
     def get_customer_details(self, ssn):
