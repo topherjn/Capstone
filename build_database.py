@@ -27,7 +27,7 @@ def build_database():
     data_adapter.create_table(df,const.CC_TABLE)
 
     # online json
-
+    
 
 if __name__ == "__main__":
     # customer_data = dr.get_dataframe(const.CUSTOMER_FILE)

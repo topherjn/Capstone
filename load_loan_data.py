@@ -1,18 +1,18 @@
 import requests
-import constants as const
-
 
 def get_response_code(url):
 
-    r = requests.get(url)
+    request = requests.get(url)
 
-    code = r.status_code
+    code = request.status_code
 
     return code
 
 
 def main_request(url):
-    r = requests.get(url)
 
-    return r
+    if get_response_code() == 200:
+        request = requests.get(url)
+
+    return request
 
