@@ -1,61 +1,105 @@
-import dbsecrets as secrets
+import findspark
+from pyspark.sql import SparkSession
 import mysql.connector
+import constants as const
+import dbsecrets as secrets
 
-# constants for name strings
-DATABASE_NAME = "creditcard_capstone"
-
-# table name constants
-BRANCH_TABLE = "CDW_SAPP_BRANCH"
-CC_TABLE = "CDW_SAPP_CREDIT_CARD"
-CUSTOMER_TABLE = "CDW_SAPP_CUSTOMER"
+findspark.init()
 
 
 class DataAdapter:
     def __init__(self):
-        self.connection = \
-            mysql.connector.connect(
-                host="localhost",           
-                user=secrets.mysql_username,
-                password=secrets.mysql_password)
-        self.database_name = DATABASE_NAME
+        self.conn = mysql.connector.connect(
+            host="localhost",
+            user=secrets.mysql_username,
+            passwd=secrets.mysql_password,
+        )
+
+        self.session_properties = {
+            'user': secrets.mysql_username,
+            'password': secrets.mysql_password,
+            'host': const.DB_URL,
+            'driver': 'com.mysql.jdbc.Driver',
+            'database': const.DATABASE_NAME
+        }
+
+        self.session = SparkSession \
+            .builder \
+            .appName("capstone") \
+            .master("local[*]") \
+            .getOrCreate()
+
+        self.session.sparkContext.setLogLevel("ERROR")
+
+        self.database_name = const.DATABASE_NAME
+
+    def get_config_info(self):
+        config = self.session.sparkContext.getConf().getAll()
+        for item in config:
+            print(item)
 
     def create_database(self):
-        cursor = self.connection.cursor(buffered=True)
+        # cursor = self.connection.cursor(buffered=True)
+        # command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
+        # cursor.execute(command)
+        # cursor.close()
         command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
+        cursor = self.conn.cursor()
+        # Create database
         cursor.execute(command)
-        cursor.close()
 
-    def create_tables(self):
-        # create customers table
+    # create a mysql table from a Spark dataframe
+    def create_table(self, df, table_name):
+        print(f"{const.DB_URL}/{self.database_name}")
+        df.write.format("jdbc") \
+            .mode("overwrite") \
+            .option("url", f"{const.DB_URL}/{self.database_name}") \
+            .option("dbtable", table_name) \
+            .option("user", secrets.mysql_username) \
+            .option("driver", "com.mysql.jdbc.Driver") \
+            .option("password", secrets.mysql_password) \
+            .save()
 
-        # create branches table
-
-        # create transactions table
-        pass
-
+    # return a Spark dataframe from a mysql table
+    # for customers in classicmodels
     def get_all_customers(self):
-        command = f"SELECT * FROM {CUSTOMER_TABLE}"
-        cursor = self.connection.cursor(buffered=True)
-        cursor.execute(command)
-        results = cursor.fetchall()
-        
-        return results
+        df = (self.session.read
+              .format("jdbc")
+              .option("url",  f"{const.DB_URL}/{self.database_name}")
+              .option("dbname", "classicmodels")
+              .option("user", self.session_properties["user"])
+              .option("password", self.session_properties["password"])
+              .option("dbtable", "customers")
+              .load())
 
-    # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the specified zip code for the given month and year.
+        df.show()
+
+    # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the
+    # specified zip code for the given month and year.
     # 2.1.4 - Sort the transactions by day in descending order.    
-    def get_specified_transactions(self,zip_code, month, year):
-        return zip_code, month, year
-    
+    def get_specified_transactions(self, zip_code: object, month: object, year: object):
+        df = (self.session.read.format("jdbc")
+              .option("driver","com.mysql.jdbc.Driver")
+              .option("url","jdbc:mysql://localhost:3306/creditcard_capstone")
+              .option("dbtable","(select branch_code from creditcard_capstone.cdw_sapp_branch) as sql")
+              .option("user", secrets.mysql_username).option("password", secrets.mysql_password)
+              .load())
+
+        df.show()
+
+
+
     # 1) Used to check the existing account details of a customer.
-    def get_customer_details(self,ssn):
+    def get_customer_details(self, ssn):
         pass
 
     # 2) Used to modify the existing account details of a customer.
     # get all details in a data object, change, then save whole thing back
-    def update_customer_details(self,ssn):
-        details = self.get_customer_details(self, ssn)
+    def update_customer_details(self, ssn):
+        # details = self.get_customer_details(self, ssn)
+        pass
 
-    # 3) Used to generate a monthly bill for a credit card number for a given month and year. 
+    # 3) Used to generate a monthly bill for a credit card number for a given month and year.
     # Hint: What does YOUR monthly credit card bill look like?  What structural components 
     # does it have?  Not just a total $ for the month, right?
 
