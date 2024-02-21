@@ -65,7 +65,7 @@ class DataAdapter:
     def get_all_customers(self):
         df = (self.session.read
               .format("jdbc")
-              .option("url", self.session_properties["host"])
+              .option("url",  f"{const.DB_URL}/{self.database_name}")
               .option("dbname", "classicmodels")
               .option("user", self.session_properties["user"])
               .option("password", self.session_properties["password"])
@@ -77,8 +77,17 @@ class DataAdapter:
     # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the
     # specified zip code for the given month and year.
     # 2.1.4 - Sort the transactions by day in descending order.    
-    def get_specified_transactions(self, zip_code, month, year):
-        pass
+    def get_specified_transactions(self, zip_code: object, month: object, year: object):
+        df = (self.session.read.format("jdbc")
+              .option("driver","com.mysql.jdbc.Driver")
+              .option("url","jdbc:mysql://localhost:3306/creditcard_capstone")
+              .option("dbtable","(select branch_code from creditcard_capstone.cdw_sapp_branch) as sql")
+              .option("user", secrets.mysql_username).option("password", secrets.mysql_password)
+              .load())
+
+        df.show()
+
+
 
     # 1) Used to check the existing account details of a customer.
     def get_customer_details(self, ssn):

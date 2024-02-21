@@ -14,6 +14,6 @@ LOAN_TABLE = "CDW-SAPP_loan_application"
 
 # spark constants
 DB_DRIVER = "com.mysql.cj.jdbc.Driver"
-DB_URL = f"jdbc:mysql://localhost:3306"
+DB_URL = "jdbc:mysql://localhost:3306"
 
 LOAN_URL = "https://raw.githubusercontent.com/platformps/LoanDataset/main/loan_data.json"

@@ -23,4 +23,10 @@ if __name__ == "__main__":
     credit_df = get_dataframe(const.CREDIT_FILE)
     customer_df = get_dataframe(const.CUSTOMER_FILE)
 
-    customer_df.show()
+    df = (branch_df.join(credit_df).join(customer_df).
+          where(branch_df['BRANCH_ZIP']=='55044').
+          where(credit_df['MONTH']==1).
+          where(credit_df['YEAR']==2018))
+
+    df.show()
+
