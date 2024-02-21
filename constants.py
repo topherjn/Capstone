@@ -10,10 +10,12 @@ DATABASE_NAME = "creditcard_capstone"
 BRANCH_TABLE = "CDW_SAPP_BRANCH"
 CC_TABLE = "CDW_SAPP_CREDIT_CARD"
 CUSTOMER_TABLE = "CDW_SAPP_CUSTOMER"
-LOAN_TABLE = "CDW-SAPP_loan_application"
+LOAN_TABLE = "CDW_SAPP_loan_application"
 
 # spark constants
 DB_DRIVER = "com.mysql.cj.jdbc.Driver"
 DB_URL = "jdbc:mysql://localhost:3306"
 
 LOAN_URL = "https://raw.githubusercontent.com/platformps/LoanDataset/main/loan_data.json"
+
+JSON_FORMAT = """org.apache.spark.sql.json"""

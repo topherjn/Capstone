@@ -27,7 +27,10 @@ def build_database():
     data_adapter.create_table(df,const.CC_TABLE)
 
     # online json
-    
+    loan_json_data = lld.main_request(const.LOAN_URL)
+    df = cdr.get_dataframe(str(loan_json_data), False)
+    df.show()
+    data_adapter.create_table(df, const.LOAN_TABLE)
 
 if __name__ == "__main__":
     # customer_data = dr.get_dataframe(const.CUSTOMER_FILE)

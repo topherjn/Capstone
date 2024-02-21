@@ -10,9 +10,9 @@ def get_response_code(url):
 
 
 def main_request(url):
-
-    if get_response_code() == 200:
+    request = None
+    if get_response_code(url) == 200:
         request = requests.get(url)
 
-    return request
+    return request.text
 
