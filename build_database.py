@@ -1,10 +1,6 @@
 import constants as const
 from dbadapter import DataAdapter
-from pyspark.sql.functions import col
-from pyspark.sql.functions import lower
-from pyspark.sql.functions import concat
-from pyspark.sql.functions import lit
-from pyspark.sql.functions import initcap
+from pyspark.sql.functions import col, lower, concat, lit, initcap, when
 from pyspark.sql.types import StringType
 import cdw_data_reader as cdr
 import load_loan_data as lld
@@ -40,9 +36,20 @@ def build_database():
                                  col("CUST_PHONE")[0:3],
                                  lit("-"),
                                  col("CUST_PHONE")[4:8]))
+    
     # # branches
     print("Creating branches table ...")
     branch_df = cdr.get_dataframe(const.BRANCH_FILE)
+
+    # handle zip nulls with default 99999
+    branch_df = branch_df.fillna(99999,subset=['BRANCH_ZIP'])
+
+    # Change the format of phone number to (XXX)XXX-XXXX
+    branch_df = branch_df.withColumn("BRANCH_PHONE",
+                                 concat(lit("(000)"),
+                                 col("BRANCH_PHONE")[0:3],
+                                 lit("-"),
+                                 col("BRANCH_PHONE")[4:8]))
     
 
     # # transactions
