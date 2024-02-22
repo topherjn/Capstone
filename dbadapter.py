@@ -1,5 +1,6 @@
 import findspark
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
 import mysql.connector
 import constants as const
 import dbsecrets as secrets
@@ -19,7 +20,7 @@ class DataAdapter:
             'user': secrets.mysql_username,
             'password': secrets.mysql_password,
             'host': const.DB_URL,
-            'driver': 'com.mysql.jdbc.Driver',
+            'driver': 'const.DB_DRIVER',
             'database': const.DATABASE_NAME
         }
 
@@ -56,7 +57,7 @@ class DataAdapter:
             .option("url", f"{const.DB_URL}/{self.database_name}") \
             .option("dbtable", table_name) \
             .option("user", secrets.mysql_username) \
-            .option("driver", "com.mysql.jdbc.Driver") \
+            .option("driver", const.DB_DRIVER) \
             .option("password", secrets.mysql_password) \
             .save()
 
@@ -82,17 +83,17 @@ class DataAdapter:
         
         # query="(select * from orders where customerNumber) as cust"
 
-        transaction_df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+        transaction_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
                                             dbtable=const.CC_TABLE).load()
-        customer_df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+        customer_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
                                             dbtable=const.CUSTOMER_TABLE).load()
-        branch_df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+        branch_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
@@ -100,6 +101,8 @@ class DataAdapter:
         
         combined_df = customer_df.join(transaction_df, on='CREDIT_CARD_NO')
         combined_df = combined_df.join(branch_df, on='BRANCH_CODE')
+
+        combined_df = combined_df.where((col("Month") == str(month)) & (col("Year") == str(year)) & (col("CUST_ZIP") == str(zip_code)))
 
         combined_df.show()
        
