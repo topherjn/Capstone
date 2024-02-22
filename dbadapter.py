@@ -104,7 +104,7 @@ class DataAdapter:
         combined_df = customer_df.join(transaction_df, on='CREDIT_CARD_NO')
         combined_df = combined_df.join(branch_df, on='BRANCH_CODE')
 
-        combined_df = combined_df.where((col("Month") == str(month)) & (col("Year") == str(year)) & (col("CUST_ZIP") == str(zip_code)))
+        combined_df = combined_df.where((col("Month") == str(month).rjust(2,'0')) & (col("Year") == str(year)) & (col("CUST_ZIP") == str(zip_code).rjust(5,'0')))
 
         combined_df.show()
        
