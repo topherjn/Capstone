@@ -24,6 +24,8 @@ def build_database():
     df = cdr.get_dataframe(const.CUSTOMER_FILE)
     df = df.withColumn("MIDDLE_NAME",lower(col("MIDDLE_NAME")))
     df = df.withColumn("APT_NO", concat(col("APT_NO"), lit(","), col("STREET_NAME")))
+    df = df.withColumnRenamed("APT_NO","FULL_STREET_ADDRESS")
+    df.drop("STREET_NAME")
     data_adapter.create_table(df,const.CUSTOMER_TABLE)
 
     # # branches

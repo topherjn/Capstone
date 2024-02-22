@@ -1,0 +1,2 @@
+https://stackoverflow.com/questions/43500827/how-to-change-case-of-whole-column-to-lowercase - lowercase df column
+https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.withColumnRenamed.html - concatenation of df columns

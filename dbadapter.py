@@ -40,10 +40,6 @@ class DataAdapter:
             print(item)
 
     def create_database(self):
-        # cursor = self.connection.cursor(buffered=True)
-        # command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
-        # cursor.execute(command)
-        # cursor.close()
         command = f"DROP DATABASE IF EXISTS {self.database_name}"
         cursor = self.conn.cursor()
         # Create database
