@@ -36,6 +36,8 @@ def build_database():
     df = cdr.get_dataframe(str(loan_json_data), False)
     data_adapter.create_table(df, const.LOAN_TABLE)
 
+    data_adapter.close()
+
 if __name__ == "__main__":
     # customer_data = dr.get_dataframe(const.CUSTOMER_FILE)
     # branch_data = dr.get_dataframe(const.BRANCH_FILE)

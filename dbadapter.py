@@ -110,3 +110,6 @@ class DataAdapter:
     # Order by year, month, and day in descending order.
     def generate_transaction_report(self, snn, start, end):
         pass
+
+    def close(self):
+        self.session.stop()
