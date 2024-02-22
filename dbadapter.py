@@ -78,16 +78,18 @@ class DataAdapter:
     # specified zip code for the given month and year.
     # 2.1.4 - Sort the transactions by day in descending order.    
     def get_specified_transactions(self, zip_code: object, month: object, year: object):
-        df = (self.session.read.format("jdbc")
-              .option("driver","com.mysql.jdbc.Driver")
-              .option("url","jdbc:mysql://localhost:3306/creditcard_capstone")
-              .option("dbtable","(select branch_code from creditcard_capstone.cdw_sapp_branch) as sql")
-              .option("user", secrets.mysql_username).option("password", secrets.mysql_password)
-              .load())
+        
+        
+        # query="(select * from orders where customerNumber) as cust"
 
+        df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+                                            user="root",\
+                                            password="password",\
+                                            url="jdbc:mysql://localhost:3306/creditcard_capstone",\
+                                            dbtable="cdw_sapp_credit_card").load()
         df.show()
-
-
+        
+       
 
     # 1) Used to check the existing account details of a customer.
     def get_customer_details(self, ssn):

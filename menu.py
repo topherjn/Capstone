@@ -62,9 +62,9 @@ def do_menu():
         print("No transaction data for that year.  Try again: ")
         year = get_integer(f"{months[month]} of which year? ")
 
-    # data_adapter = db.DataAdapter()
+    data_adapter = db.DataAdapter()
 
-    # data_adapter.get_specified_transactions(zip_code, month, year)
+    data_adapter.get_specified_transactions(zip_code, month, year)
 
 
     # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in
