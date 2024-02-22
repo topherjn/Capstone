@@ -50,7 +50,7 @@ class DataAdapter:
 
     # create a mysql table from a Spark dataframe
     def create_table(self, df, table_name):
-        print(f"{const.DB_URL}/{self.database_name}")
+        # print(f"{const.DB_URL}/{self.database_name}")
         df.write.format("jdbc") \
             .mode("overwrite") \
             .option("url", f"{const.DB_URL}/{self.database_name}") \

@@ -11,25 +11,29 @@ def build_database():
     # data_adapter.get_config_info()
 
     # # create database
+    print("Creating database ...")
     data_adapter.create_database()
 
     # # create tables
     # customers
+    print("Creating customers table ...")
     df = cdr.get_dataframe(const.CUSTOMER_FILE)
     data_adapter.create_table(df,const.CUSTOMER_TABLE)
 
     # # branches
+    print("Creating branches table ...")
     df = cdr.get_dataframe(const.BRANCH_FILE)
     data_adapter.create_table(df,const.BRANCH_TABLE)
 
     # # transactions
+    print("Creating transactions table ...")
     df = cdr.get_dataframe(const.CREDIT_FILE)
     data_adapter.create_table(df,const.CC_TABLE)
 
     # online json
+    print("Creating loan application table ...")
     loan_json_data = lld.main_request(const.LOAN_URL)
     df = cdr.get_dataframe(str(loan_json_data), False)
-    df.show()
     data_adapter.create_table(df, const.LOAN_TABLE)
 
 if __name__ == "__main__":
