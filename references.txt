@@ -2,3 +2,4 @@ https://stackoverflow.com/questions/43500827/how-to-change-case-of-whole-column-
 https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.withColumnRenamed.html - concatenation of df columns
 https://stackoverflow.com/questions/51069682/how-to-change-the-column-values-of-a-dataframe-into-title-case-in-scala - initcap
 https://stackoverflow.com/questions/45065636/pyspark-how-to-fillna-values-in-dataframe-for-specific-columns - fillna
+https://stackoverflow.com/questions/48062671/pyspark-add-a-character-in-the-middle-of-a-string - regex-replace
