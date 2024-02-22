@@ -58,6 +58,11 @@ def build_database():
     print("Creating transactions table ...")
     transactions_df = cdr.get_dataframe(const.CREDIT_FILE)
 
+    # pad month and day
+    transactions_df = transactions_df.withColumn("MONTH",lpad("MONTH",2,"0"))
+    transactions_df = transactions_df.withColumn("DAY",lpad("DAY",2,"0"))
+
+
     # online json
     # print("Creating loan application table ...")
     # loan_json_data = lld.main_request(const.LOAN_URL)
