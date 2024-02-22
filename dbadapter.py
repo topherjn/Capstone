@@ -44,6 +44,11 @@ class DataAdapter:
         # command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
         # cursor.execute(command)
         # cursor.close()
+        command = f"DROP DATABASE IF EXISTS {self.database_name}"
+        cursor = self.conn.cursor()
+        # Create database
+        cursor.execute(command)
+        
         command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
         cursor = self.conn.cursor()
         # Create database
@@ -81,18 +86,19 @@ class DataAdapter:
     def get_specified_transactions(self, zip_code: object, month: object, year: object):
         
         
-        # query="(select * from orders where customerNumber) as cust"
 
         transaction_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
                                             dbtable=const.CC_TABLE).load()
+        
         customer_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
                                             dbtable=const.CUSTOMER_TABLE).load()
+        
         branch_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\

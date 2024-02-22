@@ -1,5 +1,7 @@
 import constants as const
 from dbadapter import DataAdapter
+from pyspark.sql.functions import col
+from pyspark.sql.functions import lower
 import cdw_data_reader as cdr
 import load_loan_data as lld
 
@@ -18,6 +20,7 @@ def build_database():
     # customers
     print("Creating customers table ...")
     df = cdr.get_dataframe(const.CUSTOMER_FILE)
+    df = df.withColumn("MIDDLE_NAME",lower(col("MIDDLE_NAME")))
     data_adapter.create_table(df,const.CUSTOMER_TABLE)
 
     # # branches
