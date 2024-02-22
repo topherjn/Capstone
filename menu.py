@@ -52,7 +52,7 @@ def do_menu():
     month = get_integer("Enter the menu number for the month you want to query: ")
     while month not in range(1, 13):
         month = int(input("Invalid month.  Enter the menu number for the month you want to query: "))
-
+        
     # get the year from user
     clear_screen()
     year = get_integer(f"{months[month]} of which year? ")

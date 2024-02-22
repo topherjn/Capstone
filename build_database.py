@@ -1,6 +1,6 @@
 import constants as const
 from dbadapter import DataAdapter
-from pyspark.sql.functions import col, lower, concat, lit, initcap, when
+from pyspark.sql.functions import col, lower, concat, lit, initcap, lpad
 from pyspark.sql.types import StringType
 import cdw_data_reader as cdr
 import load_loan_data as lld
@@ -36,6 +36,8 @@ def build_database():
                                  col("CUST_PHONE")[0:3],
                                  lit("-"),
                                  col("CUST_PHONE")[4:8]))
+    # pad zip
+    cust_df = cust_df.withColumn("CUST_ZIP",lpad("CUST_ZIP",5,"0"))
     
     # # branches
     print("Creating branches table ...")
@@ -55,7 +57,6 @@ def build_database():
     # # transactions
     print("Creating transactions table ...")
     transactions_df = cdr.get_dataframe(const.CREDIT_FILE)
-   
 
     # online json
     # print("Creating loan application table ...")
