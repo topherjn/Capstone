@@ -82,13 +82,26 @@ class DataAdapter:
         
         # query="(select * from orders where customerNumber) as cust"
 
-        df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+        transaction_df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
-                                            dbtable="cdw_sapp_credit_card").load()
-        df.show()
+                                            dbtable=const.CC_TABLE).load()
+        customer_df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+                                            user="root",\
+                                            password="password",\
+                                            url="jdbc:mysql://localhost:3306/creditcard_capstone",\
+                                            dbtable=const.CUSTOMER_TABLE).load()
+        branch_df=self.session.read.format("jdbc").options(driver="com.mysql.cj.jdbc.Driver",\
+                                            user="root",\
+                                            password="password",\
+                                            url="jdbc:mysql://localhost:3306/creditcard_capstone",\
+                                            dbtable=const.BRANCH_TABLE).load()
         
+        combined_df = customer_df.join(transaction_df, on='CREDIT_CARD_NO')
+        combined_df = combined_df.join(branch_df, on='BRANCH_CODE')
+
+        combined_df.show()
        
 
     # 1) Used to check the existing account details of a customer.
