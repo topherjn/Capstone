@@ -1,7 +1,7 @@
-from get_transactions import get_transactions_by_zip_and_time
+from get_transactions import transactions_query
 
 def do_menu():
-    get_transactions_by_zip_and_time()
+    transactions_query()
 
 
 if __name__ == "__main__":
