@@ -94,17 +94,15 @@ class DataAdapter:
 
     # return a Spark dataframe from a mysql table
     # for customers in classicmodels
-    def get_all_customers(self):
-        df = (self.session.read
-              .format("jdbc")
-              .option("url",  f"{const.DB_URL}/{self.database_name}")
-              .option("dbname", "classicmodels")
-              .option("user", self.session_properties["user"])
-              .option("password", self.session_properties["password"])
-              .option("dbtable", "customers")
-              .load())
 
-        df.show()
+    def get_all_table_records(self, table):
+     
+        df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
+                                            user=secrets.mysql_username,\
+                                            password=secrets.mysql_password,\
+                                            url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
+                                            dbtable=table).load()
+        return df
 
     # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the
     # specified zip code for the given month and year.
@@ -112,25 +110,13 @@ class DataAdapter:
     def get_specified_transactions(self, zip_code: object, month: object, year: object):
         
         # get credit-card table from RDBMS
-        transaction_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
-                                            user="root",\
-                                            password="password",\
-                                            url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
-                                            dbtable=const.CC_TABLE).load()
+        transaction_df=self.get_all_table_records(const.CC_TABLE)
         
         # get customer table from RDBMS
-        customer_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
-                                            user="root",\
-                                            password="password",\
-                                            url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
-                                            dbtable=const.CUSTOMER_TABLE).load()
-        
+        customer_df = self.get_all_table_records(const.CUSTOMER_TABLE)
+
         # get branch table from RDBMS
-        branch_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
-                                            user="root",\
-                                            password="password",\
-                                            url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
-                                            dbtable=const.BRANCH_TABLE).load()
+        branch_df= self.get_all_table_records(const.BRANCH_TABLE)
         
         # join the three tables
         combined_df = customer_df.join(transaction_df, on='CREDIT_CARD_NO')
