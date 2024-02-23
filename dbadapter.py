@@ -115,21 +115,21 @@ class DataAdapter:
         transaction_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
-                                            url="jdbc:mysql://localhost:3306/creditcard_capstone",\
+                                            url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
                                             dbtable=const.CC_TABLE).load()
         
         # get customer table from RDBMS
         customer_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
-                                            url="jdbc:mysql://localhost:3306/creditcard_capstone",\
+                                            url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
                                             dbtable=const.CUSTOMER_TABLE).load()
         
         # get branch table from RDBMS
         branch_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
-                                            url="jdbc:mysql://localhost:3306/creditcard_capstone",\
+                                            url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
                                             dbtable=const.BRANCH_TABLE).load()
         
         # join the three tables

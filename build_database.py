@@ -52,7 +52,6 @@ def build_database():
     # pad zip
     branch_df = branch_df.withColumn("BRANCH_ZIP",lpad("BRANCH_ZIP",5,"0"))
     
-
     # # transactions
     print("Cleaning transactions data ...")
     transactions_df = cdr.get_dataframe(const.CREDIT_FILE)
@@ -67,8 +66,6 @@ def build_database():
     transactions_df = transactions_df.drop("MONTH")
     transactions_df = transactions_df.drop("DAY")
     
-
-
     # online json
     print("Retrieving and cleaning loan application data ...")
     loan_json_data = lld.main_request(const.LOAN_URL)
@@ -79,11 +76,12 @@ def build_database():
     data_adapter.create_table(cust_df,const.CUSTOMER_TABLE)
     data_adapter.create_table(branch_df,const.BRANCH_TABLE)
     data_adapter.create_table(transactions_df,const.CC_TABLE)
-    # data_adapter.create_table(loan_df, const.LOAN_TABLE)
+    data_adapter.create_table(loan_df, const.LOAN_TABLE)
 
     # create keys
     data_adapter.add_keys()
 
+    # free-up resources
     data_adapter.close()
 
 if __name__ == "__main__":
