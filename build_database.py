@@ -60,6 +60,7 @@ def build_database():
     # pad month and day
     transactions_df = transactions_df.withColumn("MONTH",lpad("MONTH",2,"0"))
     transactions_df = transactions_df.withColumn("DAY",lpad("DAY",2,"0"))
+
     # create TIMEID column
     transactions_df = transactions_df.withColumn("YEAR",concat(col("YEAR"),col("MONTH"),col("DAY")))
     transactions_df = transactions_df.withColumnRenamed("YEAR","TIMEID")
@@ -69,9 +70,9 @@ def build_database():
 
 
     # online json
-    # print("Cleaning loan application data ...")
-    # loan_json_data = lld.main_request(const.LOAN_URL)
-    # loan_df = cdr.get_dataframe(str(loan_json_data), False)
+    print("Retrieving and cleaning loan application data ...")
+    loan_json_data = lld.main_request(const.LOAN_URL)
+    loan_df = cdr.get_dataframe(str(loan_json_data), False)
    
     # create the tables in MySQL
     print("Creating tables in MySQL RDBMS")
