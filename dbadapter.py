@@ -61,6 +61,36 @@ class DataAdapter:
             .option("driver", const.DB_DRIVER) \
             .option("password", secrets.mysql_password) \
             .save()
+        
+    def add_keys(self):
+
+        # add primary keys
+        cursor = self.conn.cursor()
+        cursor.execute(f"use {const.DATABASE_NAME}")
+        command = f"alter table {const.CUSTOMER_TABLE} add primary key (ssn)"
+        cursor.execute(command)
+        command = (f"alter table {const.BRANCH_TABLE} add primary key (branch_code)")
+        cursor.execute(command)
+        command = (f"alter table {const.CC_TABLE} add primary key (transaction_id)")
+
+        cursor.execute(command)
+
+        # add foreign keys
+        command = (f"alter table {const.CC_TABLE} \
+                          add constraint fk_branch \
+                          foreign key (branch_code) references \
+                          {const.BRANCH_TABLE}(branch_code)")
+        
+        cursor.execute(command)
+
+        command = (f"alter table {const.CC_TABLE} \
+                     add constraint fk_cust \
+                     foreign key (cust_ssn) references \
+                     {const.CUSTOMER_TABLE}(ssn)")
+        
+        cursor.execute(command)
+
+        cursor.close()
 
     # return a Spark dataframe from a mysql table
     # for customers in classicmodels

@@ -80,6 +80,9 @@ def build_database():
     data_adapter.create_table(transactions_df,const.CC_TABLE)
     # data_adapter.create_table(loan_df, const.LOAN_TABLE)
 
+    # create keys
+    data_adapter.add_keys()
+
     data_adapter.close()
 
 if __name__ == "__main__":
