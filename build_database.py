@@ -25,7 +25,7 @@ def build_database():
     # Concatenate Apartment no and Street name of customer's Residence with comma as a seperator (Street, Apartment)
     cust_df = cust_df.withColumn("APT_NO", concat(col("APT_NO"), lit(","), col("STREET_NAME")))
     cust_df = cust_df.withColumnRenamed("APT_NO","FULL_STREET_ADDRESS")
-    cust_df.drop("STREET_NAME")
+    cust_df = cust_df.drop("STREET_NAME")
     # Convert the First and Last Name to Title Case
     cust_df = cust_df.withColumn("FIRST_NAME",initcap(col("FIRST_NAME")))
     cust_df = cust_df.withColumn("LAST_NAME",initcap(col("LAST_NAME")))
@@ -60,19 +60,25 @@ def build_database():
     # pad month and day
     transactions_df = transactions_df.withColumn("MONTH",lpad("MONTH",2,"0"))
     transactions_df = transactions_df.withColumn("DAY",lpad("DAY",2,"0"))
+    # create TIMEID column
+    transactions_df = transactions_df.withColumn("YEAR",concat(col("YEAR"),col("MONTH"),col("DAY")))
+    transactions_df = transactions_df.withColumnRenamed("YEAR","TIMEID")
+    transactions_df = transactions_df.drop("MONTH")
+    transactions_df = transactions_df.drop("DAY")
+    
 
 
     # online json
-    print("Cleaning loan application data ...")
-    loan_json_data = lld.main_request(const.LOAN_URL)
-    loan_df = cdr.get_dataframe(str(loan_json_data), False)
+    # print("Cleaning loan application data ...")
+    # loan_json_data = lld.main_request(const.LOAN_URL)
+    # loan_df = cdr.get_dataframe(str(loan_json_data), False)
    
     # create the tables in MySQL
     print("Creating tables in MySQL RDBMS")
     data_adapter.create_table(cust_df,const.CUSTOMER_TABLE)
     data_adapter.create_table(branch_df,const.BRANCH_TABLE)
     data_adapter.create_table(transactions_df,const.CC_TABLE)
-    data_adapter.create_table(loan_df, const.LOAN_TABLE)
+    # data_adapter.create_table(loan_df, const.LOAN_TABLE)
 
     data_adapter.close()
 

@@ -81,8 +81,6 @@ class DataAdapter:
     # 2.1.4 - Sort the transactions by day in descending order.    
     def get_specified_transactions(self, zip_code: object, month: object, year: object):
         
-        
-
         transaction_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
@@ -104,7 +102,7 @@ class DataAdapter:
         combined_df = customer_df.join(transaction_df, on='CREDIT_CARD_NO')
         combined_df = combined_df.join(branch_df, on='BRANCH_CODE')
 
-        combined_df = combined_df.where((col("Month") == str(month)) & (col("Year") == str(year)) & (col("CUST_ZIP") == str(zip_code)))
+        combined_df = combined_df.where(  (col("TIMEID").substr(0,6) == str(year)+str(month).rjust(2,'0')) & (col("CUST_ZIP")==str(zip_code).rjust(5,'0'))  )
 
         combined_df.show()
        
