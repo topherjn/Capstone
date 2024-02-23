@@ -111,30 +111,36 @@ class DataAdapter:
     # 2.1.4 - Sort the transactions by day in descending order.    
     def get_specified_transactions(self, zip_code: object, month: object, year: object):
         
+        # get credit-card table from RDBMS
         transaction_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
                                             dbtable=const.CC_TABLE).load()
         
+        # get customer table from RDBMS
         customer_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
                                             dbtable=const.CUSTOMER_TABLE).load()
         
+        # get branch table from RDBMS
         branch_df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user="root",\
                                             password="password",\
                                             url="jdbc:mysql://localhost:3306/creditcard_capstone",\
                                             dbtable=const.BRANCH_TABLE).load()
         
+        # join the three tables
         combined_df = customer_df.join(transaction_df, on='CREDIT_CARD_NO')
         combined_df = combined_df.join(branch_df, on='BRANCH_CODE')
 
+        # apply the selection criteria to the join
         combined_df = combined_df.where(  (col("TIMEID").substr(0,6) == str(year)+str(month).rjust(2,'0')) & (col("CUST_ZIP")==str(zip_code).rjust(5,'0'))  )
 
-
+        # display the results
+        # TODO make legible
         combined_df.show()
        
 
