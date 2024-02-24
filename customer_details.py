@@ -3,12 +3,22 @@ from os import system, name
 import dbadapter as db
 import dbsecrets as secret
 import constants as const
+import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 import findspark
 findspark.init()
 
-findspark.init()
+def print_pretty_details(df):
+    row_rdd = df.rdd
+    first_row = row_rdd.first()
+
+    # Iterate through column names and values and print them
+    for i, col_name in enumerate(df.columns):
+        print(f"{col_name}: {first_row[i]}")
+
+
+
 def get_customer_details(cust_id):
     cust_id = "123451007"
 
@@ -24,7 +34,10 @@ def get_customer_details(cust_id):
     
     df = df.where(col("ssn")==cust_id)
 
-    df.show()
+    if df.rdd.isEmpty():
+        print("Customer doesn't exist")
+    else:
+        print_pretty_details(df)
     
 
     
@@ -36,6 +49,7 @@ def get_customer_details(cust_id):
 
     # 4) Used to display the transactions made by a customer between two
     # dates. Order by year, month, and day in descending order.
+
 
 if __name__ == "__main__":
     get_customer_details(24234)
