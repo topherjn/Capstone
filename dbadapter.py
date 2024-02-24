@@ -7,7 +7,8 @@ import dbsecrets as secrets
 
 findspark.init()
 
-
+# this class handles all MySQL RDBMS tasks and some PySpark tasks
+# dealing with reading and writing data
 class DataAdapter:
     def __init__(self):
         self.conn = mysql.connector.connect(
@@ -95,7 +96,7 @@ class DataAdapter:
     # return a Spark dataframe from a mysql table
     # for customers in classicmodels
 
-    def get_all_table_records(self, table):
+    def get_table_data(self, table):
      
         df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
                                             user=secrets.mysql_username,\
@@ -110,13 +111,13 @@ class DataAdapter:
     def get_specified_transactions(self, zip_code: object, month: object, year: object):
         
         # get credit-card table from RDBMS
-        transaction_df=self.get_all_table_records(const.CC_TABLE)
+        transaction_df=self.get_table_data(const.CC_TABLE)
         
         # get customer table from RDBMS
-        customer_df = self.get_all_table_records(const.CUSTOMER_TABLE)
+        customer_df = self.get_table_data(const.CUSTOMER_TABLE)
 
         # get branch table from RDBMS
-        branch_df= self.get_all_table_records(const.BRANCH_TABLE)
+        branch_df= self.get_table_data(const.BRANCH_TABLE)
         
         # join the three tables
         combined_df = customer_df.join(transaction_df, on='CREDIT_CARD_NO')
@@ -127,7 +128,10 @@ class DataAdapter:
                             .where(  (col("TIMEID")
                             .substr(0,6) == str(year)+str(month)
                             .rjust(2,'0')) & (col("CUST_ZIP")==str(zip_code)
-                            .rjust(5,'0'))  )
+                            .rjust(5,'0')))
+        
+        # sort
+        combined_df = combined_df.sort("TIMEID",ascending=False)
 
         # display the results
         # TODO make legible
