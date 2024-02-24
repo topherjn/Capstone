@@ -34,12 +34,7 @@ def get_customer_details(cust_id):
     
     df = df.where(col("ssn")==cust_id)
 
-    if df.rdd.isEmpty():
-        print("Customer doesn't exist")
-    else:
-        print_pretty_details(df)
-    
-
+    return df
     
     # Functional Requirements 2.2
 
@@ -49,7 +44,12 @@ def get_customer_details(cust_id):
 
     # 4) Used to display the transactions made by a customer between two
     # dates. Order by year, month, and day in descending order.
-
+    def display_transactions_by_dates(cust_id,begin, end):
+        pass
 
 if __name__ == "__main__":
-    get_customer_details(24234)
+    df = get_customer_details(24234)
+    if df.rdd.isEmpty():
+        print("Customer doesn't exist")
+    else:
+        print_pretty_details(df)
