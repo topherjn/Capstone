@@ -89,15 +89,9 @@ class DataAdapter:
                     data_type = 'varchar(255)'
 
                 command = f"alter table {column[0]} modify {column[1]} {data_type}"
-                print(command)
-                cursor.execute(command)
-            
-
-
-
-
-        
-        #command = f"alter table {const.CUSTOMER_TABLE} modify ssn int"
+                #print(command)
+                cursor.execute(command)   
+       
         cursor.close()
         
     def add_keys(self):

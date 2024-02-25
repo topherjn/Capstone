@@ -67,18 +67,18 @@ def build_database():
     transactions_df = transactions_df.drop("DAY")
     
     # online json
-    # print("Retrieving and cleaning loan application data ...")
-    # loan_json_data = lld.main_request(const.LOAN_URL)
-    # loan_df = cdr.get_dataframe(str(loan_json_data), False)
+    print("Retrieving and cleaning loan application data ...")
+    loan_json_data = lld.main_request(const.LOAN_URL)
+    loan_df = cdr.get_dataframe(str(loan_json_data), False)
    
     # create the tables in MySQL
     print("Creating tables in MySQL RDBMS")
     data_adapter.create_table(cust_df,const.CUSTOMER_TABLE)
     data_adapter.create_table(branch_df,const.BRANCH_TABLE)
     data_adapter.create_table(transactions_df,const.CC_TABLE)
-    #data_adapter.create_table(loan_df, const.LOAN_TABLE)
+    data_adapter.create_table(loan_df, const.LOAN_TABLE)
 
-    # map data types
+    # map data types - kludge
     data_adapter.map_data_types()
 
     # create keys
