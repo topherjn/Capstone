@@ -53,3 +53,16 @@ if __name__ == "__main__":
         print("Customer doesn't exist")
     else:
         print_pretty_details(df)
+
+# 1) Used to check the existing account details of a customer.
+# 2) Used to modify the existing account details of a customer.
+# 3) Used to generate a monthly bill for a credit card number for a given
+# month and year.
+# Hint: What does YOUR monthly credit card bill look like? What structural
+# components does it have? Not just a total $ for the month, right?
+# 4) Used to display the transactions made by a customer between two
+# dates. Order by year, month, and day in descending order.
+'''select *
+from cdw_sapp_customer c inner join cdw_sapp_credit_card t on c.ssn = t.CUST_SSN
+where t.CUST_SSN = "123451007" and t.TIMEID between 20180115 and 20180530
+order by t.timeid desc;'''

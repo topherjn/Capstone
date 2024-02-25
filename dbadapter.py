@@ -62,6 +62,43 @@ class DataAdapter:
             .option("driver", const.DB_DRIVER) \
             .option("password", secrets.mysql_password) \
             .save()
+    
+    def map_data_types(self):
+
+        # don't have Spark 3.5.0 so no access to MySQl types
+        # first get a list of table names
+        # the a list of column names for each table
+        # make them all varchar at first
+        # then change specific ones
+        cursor = self.conn.cursor()
+
+        command = "SELECT table_name,column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS where table_schema = 'creditcard_capstone'"
+        cursor.execute(command)
+        columns = cursor.fetchall()
+        
+        command = f"USE {const.DATABASE_NAME}"
+        cursor.execute(command)
+        for column in columns:
+            data_type = ''
+            if column[2] in ["bigint","text"]:
+                if column[1] == "LAST_UPDATED":
+                    data_type = "TIMESTAMP"
+                elif column[2] == 'bigint':
+                    data_type = 'int'
+                elif column[2] == 'text':
+                    data_type = 'varchar(255)'
+
+                command = f"alter table {column[0]} modify {column[1]} {data_type}"
+                print(command)
+                cursor.execute(command)
+            
+
+
+
+
+        
+        #command = f"alter table {const.CUSTOMER_TABLE} modify ssn int"
+        cursor.close()
         
     def add_keys(self):
 
