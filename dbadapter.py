@@ -10,6 +10,7 @@ findspark.init()
 # this class handles all MySQL RDBMS tasks and some PySpark tasks
 # dealing with reading and writing data
 class DataAdapter:
+    # constructor sets up MySQL and Spark connectors
     def __init__(self):
         self.conn = mysql.connector.connect(
             host="localhost",
@@ -35,11 +36,13 @@ class DataAdapter:
 
         self.database_name = const.DATABASE_NAME
 
+    # just for info delete?
     def get_config_info(self):
         config = self.session.sparkContext.getConf().getAll()
         for item in config:
             print(item)
 
+    # create the capstone db
     def create_database(self):
         command = f"DROP DATABASE IF EXISTS {self.database_name}"
         cursor = self.conn.cursor()
@@ -50,6 +53,8 @@ class DataAdapter:
         cursor = self.conn.cursor()
         # Create database
         cursor.execute(command)
+
+        cursor.close()
 
     # create a mysql table from a Spark dataframe
     def create_table(self, df, table_name):
@@ -63,6 +68,7 @@ class DataAdapter:
             .option("password", secrets.mysql_password) \
             .save()
     
+    # convert Spark types to MySQL types
     def map_data_types(self):
 
         # don't have Spark 3.5.0 so no access to MySQl types
@@ -97,6 +103,7 @@ class DataAdapter:
 
         cursor.close()
         
+    # create MySQL relationships
     def add_keys(self):
 
         # add primary keys
@@ -137,7 +144,6 @@ class DataAdapter:
                                             dbtable=table).load()
         return df
     
-
     # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the
     # specified zip code for the given month and year.
     # 2.1.4 - Sort the transactions by day in descending order.    
@@ -195,6 +201,7 @@ class DataAdapter:
         df = df.where(col('TIMEID').like(timeid))
         df.show()
 
+        
     # 4) Used to display the transactions made by a customer between two dates.
     # Order by year, month, and day in descending order.
     def generate_transaction_report(self, snn, start, end):

@@ -4,6 +4,7 @@ from pyspark.sql.functions import col, lower, concat, lit, initcap, lpad, regexp
 from pyspark.sql.types import StringType
 import cdw_data_reader as cdr
 import load_loan_data as lld
+from os.path import isfile
 
 
 def build_database():
@@ -65,11 +66,19 @@ def build_database():
     transactions_df = transactions_df.withColumnRenamed("YEAR","TIMEID")
     transactions_df = transactions_df.drop("MONTH")
     transactions_df = transactions_df.drop("DAY")
-    
-    # online json
-    print("Retrieving and cleaning loan application data ...")
-    loan_json_data = lld.main_request(const.LOAN_URL)
-    loan_df = cdr.get_dataframe(str(loan_json_data), False)
+
+    # cache the loan data from the REST api
+    # but grab it if it's missing
+    if isfile(f"data\{const.LOAN_FILE}"):
+        # local json
+        loan_df = cdr.get_dataframe(const.LOAN_FILE)
+    else: 
+        # online json
+        loan_json_data = lld.main_request(const.LOAN_URL)
+        loan_df = cdr.get_dataframe(str(loan_json_data), False)
+        # cache it:
+        with open(f"data\{const.LOAN_FILE}", 'w') as f:
+            f.write(loan_json_data)
    
     # create the tables in MySQL
     print("Creating tables in MySQL RDBMS")

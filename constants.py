@@ -2,6 +2,7 @@
 BRANCH_FILE = "cdw_sapp_branch.json"
 CREDIT_FILE = "cdw_sapp_credit.json"
 CUSTOMER_FILE = "cdw_sapp_custmer.json"
+LOAN_FILE = "cdw_sapp_loan.json"
 
 # constants for name strings
 DATABASE_NAME = "creditcard_capstone"
