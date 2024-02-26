@@ -92,11 +92,6 @@ class DataAdapter:
                 print(command)
                 cursor.execute(command)
             
-
-
-
-
-        
         #command = f"alter table {const.CUSTOMER_TABLE} modify ssn int"
         cursor.close()
         
@@ -131,8 +126,6 @@ class DataAdapter:
         cursor.close()
 
     # return a Spark dataframe from a mysql table
-    # for customers in classicmodels
-
     def get_table_data(self, table):
      
         df=self.session.read.format("jdbc").options(driver=const.DB_DRIVER,\
@@ -141,6 +134,7 @@ class DataAdapter:
                                             url= f"{const.DB_URL}/{const.DATABASE_NAME}", \
                                             dbtable=table).load()
         return df
+    
 
     # 2.1.3- Use the provided inputs to query the database and retrieve a list of transactions made by customers in the
     # specified zip code for the given month and year.
@@ -189,8 +183,15 @@ class DataAdapter:
     # Hint: What does YOUR monthly credit card bill look like?  What structural components 
     # does it have?  Not just a total $ for the month, right?
 
-    def generate_customer_bill(self, snn):
-        pass
+    def generate_cc_bill(self, ccn, month, year):
+        timeid = str(year) + str(month) + "%"
+        '''SELECT transaction_type, count(*),sum(transaction_value)
+        from cdw_sapp_credit_card
+        group by transaction_type;'''
+        df = self.get_table_data(const.CC_TABLE)
+        df = df.where(col('CREDIT_CARD_NO')==ccn)
+        df = df.where(col('TIMEID').like(timeid))
+        df.show()
 
     # 4) Used to display the transactions made by a customer between two dates.
     # Order by year, month, and day in descending order.
@@ -199,3 +200,18 @@ class DataAdapter:
 
     def close(self):
         self.session.stop()
+
+if __name__ == "__main__":
+    # data_adapter = DataAdapter()
+
+    # data_adapter.get_specified_transactions('55044', '02', '2018')
+
+    # data_adapter.close()
+
+    data_adapter = DataAdapter()
+
+    data_adapter.generate_cc_bill('4210653349028689','01','2018')
+
+    data_adapter.close()
+
+    

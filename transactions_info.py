@@ -65,3 +65,5 @@ def transactions_query():
     data_adapter = db.DataAdapter()
 
     data_adapter.get_specified_transactions(zip_code, month, year)
+
+    data_adapter.close()
