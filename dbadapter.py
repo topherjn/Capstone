@@ -179,7 +179,9 @@ class DataAdapter:
 
     # 1) Used to check the existing account details of a customer.
     def get_customer_details(self, ssn):
-        pass
+        df = self.get_table_data(const.CUSTOMER_TABLE)
+        df = df.where(col("SSN") == ssn)
+        df.show()
 
     # 2) Used to modify the existing account details of a customer.
     # get all details in a data object, change, then save whole thing back
@@ -227,8 +229,8 @@ if __name__ == "__main__":
 
     data_adapter = DataAdapter()
 
-    data_adapter.generate_cc_bill('4210653349028689','01','2018')
-
+    # data_adapter.generate_cc_bill('4210653349028689','01','2018')
+    data_adapter.get_customer_details(123451152)
     data_adapter.close()
 
     
