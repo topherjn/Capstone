@@ -256,6 +256,21 @@ class DataAdapter:
         df = df.sort("TIMEID",ascending=False)
         df.show()
 
+    def get_transaction_totals_by_category(self, category):
+        df = self.get_table_data(const.CC_TABLE)
+        #categories = df.select('TRANSACTION_TYPE').distinct().collect().toPandas().column.to_list() 
+        if True:
+            df = df.where(col("TRANSACTION_TYPE")==category)
+            count = df.count()
+            total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
+            print(f"Total value of {count} transactions in category {category}: ")
+            print(round(float(total['sum(TRANSACTION_VALUE)']),2))
+        else:
+            print(f"No such category: {category}")
+
+    def get_transaction_totals_by_branch(self, branch):
+        pass
+
     def close(self):
         self.session.stop()
 
@@ -269,7 +284,8 @@ if __name__ == "__main__":
     data_adapter = DataAdapter()
 
     # data_adapter.generate_cc_bill('4210653349028689','01','2018')
-    data_adapter.update_customer_details(123451152)
+    #data_adapter.update_customer_details(123451152)
+    data_adapter.get_transaction_totals_by_category("GAS")
 
 
     # data_adapter.generate_transaction_report(123451152,20180101,20180415)
