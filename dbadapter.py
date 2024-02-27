@@ -176,18 +176,52 @@ class DataAdapter:
         # TODO make legible?
         combined_df.show()
        
-
     # 1) Used to check the existing account details of a customer.
     def get_customer_details(self, ssn):
         df = self.get_table_data(const.CUSTOMER_TABLE)
         df = df.where(col("SSN") == ssn)
-        df.show()
+        return df
 
     # 2) Used to modify the existing account details of a customer.
     # get all details in a data object, change, then save whole thing back
+    def update_customer_record(self, field, val, ssn):
+
+        cursor = self.conn.cursor()
+        cursor.execute(f"use {const.DATABASE_NAME}")
+
+        command = f"UPDATE {const.CUSTOMER_TABLE} SET {field}='{val}',LAST_UPDATED=NOW() WHERE SSN='{ssn}'"
+        print(command)
+        cursor.execute(command)
+        cursor.close()
+        self.conn.commit()
+
     def update_customer_details(self, ssn):
-        # details = self.get_customer_details(self, ssn)
-        pass
+        details = self.get_customer_details(ssn)
+        details = details.select('FIRST_NAME','MIDDLE_NAME','LAST_NAME',
+                                 'FULL_STREET_ADDRESS','CUST_CITY','CUST_STATE',
+                                 'CUST_COUNTRY','CUST_ZIP','CUST_PHONE')
+        print("Current values:")
+        details.show()
+
+        fields = details.columns
+
+        print("Which of the above fields would you like to update?")
+        field = input("Please type the exact column name: ")
+
+        while field.upper() != 'QUIT':
+
+            while not field.upper() in fields:
+                print("Try again.")
+                field = input("Please type the exact column name or 'quit': ")
+
+            if field.upper() != 'QUIT':
+                field = field.upper()
+                
+                val = input("What value do you want to change the field to? ")
+                self.update_customer_record(field=field,val=val, ssn=ssn)
+
+            print("Which of the above fields would you like to update?")
+            field = input("Please type the exact column name or 'quit': ")
 
     # 3) Used to generate a monthly bill for a credit card number for a given month and year.
     # Hint: What does YOUR monthly credit card bill look like?  What structural components 
@@ -235,9 +269,10 @@ if __name__ == "__main__":
     data_adapter = DataAdapter()
 
     # data_adapter.generate_cc_bill('4210653349028689','01','2018')
-    # data_adapter.get_customer_details(123451152)
+    data_adapter.update_customer_details(123451152)
 
-    data_adapter.generate_transaction_report(123451152,20180101,20180415)
+
+    # data_adapter.generate_transaction_report(123451152,20180101,20180415)
     
     data_adapter.close()
 
