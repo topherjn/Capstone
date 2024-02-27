@@ -192,18 +192,19 @@ class DataAdapter:
     # does it have?  Not just a total $ for the month, right?
 
     def generate_cc_bill(self, ccn, month, year):
+        # construct the where parameter
         timeid = str(year) + str(month) + "%"
-        '''SELECT transaction_type, count(*),sum(transaction_value)
-        from cdw_sapp_credit_card
-        group by transaction_type;'''
+        # in order just to get customer name we have to join
         df = self.get_table_data(const.CC_TABLE)
         df=df.join(self.get_table_data(const.CUSTOMER_TABLE),on ='CREDIT_CARD_NO')
         df = df.where(col('CREDIT_CARD_NO')==ccn)
         df = df.where(col('TIMEID').like(timeid))
         print(f"Transaction summary for credit card number: {ccn}\nFor customer:")
         df.select('FIRST_NAME','LAST_NAME').distinct().show()
+        # print out a summary for the month
         print(f"Activity for {month} {year}:")
         df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show()
+        # total bill for the month
         print("Total charges")
         total_charges = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
         print(round(float(total_charges['sum(TRANSACTION_VALUE)']),2))
