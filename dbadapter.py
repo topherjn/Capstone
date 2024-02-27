@@ -214,8 +214,13 @@ class DataAdapter:
 
     # 4) Used to display the transactions made by a customer between two dates.
     # Order by year, month, and day in descending order.
-    def generate_transaction_report(self, snn, start, end):
-        pass
+    def generate_transaction_report(self, ssn, start, end):
+        df = self.get_table_data(const.CC_TABLE)
+        df = df.where(col("CUST_SSN")==ssn)
+        df = df.where(col("TIMEID").between(start,end))
+        df.collect()
+        df = df.sort("TIMEID",ascending=False)
+        df.show()
 
     def close(self):
         self.session.stop()
@@ -230,7 +235,10 @@ if __name__ == "__main__":
     data_adapter = DataAdapter()
 
     # data_adapter.generate_cc_bill('4210653349028689','01','2018')
-    data_adapter.get_customer_details(123451152)
+    # data_adapter.get_customer_details(123451152)
+
+    data_adapter.generate_transaction_report(123451152,20180101,20180415)
+    
     data_adapter.close()
 
     
