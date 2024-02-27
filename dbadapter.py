@@ -74,7 +74,7 @@ class DataAdapter:
         # don't have Spark 3.5.0 so no access to MySQl types
         # first get a list of table names
         # the a list of column names for each table
-        # make them all varchar at first
+        # default is varchar
         # then change specific ones
         cursor = self.conn.cursor()
 
@@ -96,11 +96,9 @@ class DataAdapter:
 
                 command = f"alter table {column[0]} modify {column[1]} {data_type}"
 
-                print(command)
+                #print(command)
                 cursor.execute(command)
             
-        #command = f"alter table {const.CUSTOMER_TABLE} modify ssn int"
-
         cursor.close()
         
     # create MySQL relationships
@@ -117,7 +115,8 @@ class DataAdapter:
 
         cursor.execute(command)
 
-        # add foreign keys
+        # add foreign keys - credit card table is the junction
+        # from credit card to branch
         command = (f"alter table {const.CC_TABLE} \
                           add constraint fk_branch \
                           foreign key (branch_code) references \
@@ -125,6 +124,7 @@ class DataAdapter:
         
         cursor.execute(command)
 
+        # from credit card to customer
         command = (f"alter table {const.CC_TABLE} \
                      add constraint fk_cust \
                      foreign key (cust_ssn) references \
@@ -173,7 +173,7 @@ class DataAdapter:
         combined_df = combined_df.sort("TIMEID",ascending=False)
 
         # display the results
-        # TODO make legible
+        # TODO make legible?
         combined_df.show()
        
 
@@ -197,11 +197,18 @@ class DataAdapter:
         from cdw_sapp_credit_card
         group by transaction_type;'''
         df = self.get_table_data(const.CC_TABLE)
+        df=df.join(self.get_table_data(const.CUSTOMER_TABLE),on ='CREDIT_CARD_NO')
         df = df.where(col('CREDIT_CARD_NO')==ccn)
         df = df.where(col('TIMEID').like(timeid))
-        df.show()
-
+        print(f"Transaction summary for credit card number: {ccn}\nFor customer:")
+        df.select('FIRST_NAME','LAST_NAME').distinct().show()
+        print(f"Activity for {month} {year}:")
+        df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show()
+        print("Total charges")
+        total_charges = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
+        print(round(float(total_charges['sum(TRANSACTION_VALUE)']),2))
         
+
     # 4) Used to display the transactions made by a customer between two dates.
     # Order by year, month, and day in descending order.
     def generate_transaction_report(self, snn, start, end):

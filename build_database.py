@@ -71,12 +71,15 @@ def build_database():
     # but grab it if it's missing
     if isfile(f"data\{const.LOAN_FILE}"):
         # local json
+        print("Fetching local cache of loan data ...")
         loan_df = cdr.get_dataframe(const.LOAN_FILE)
     else: 
         # online json
+        print("Fetching online loan data ...")
         loan_json_data = lld.main_request(const.LOAN_URL)
         loan_df = cdr.get_dataframe(str(loan_json_data), False)
         # cache it:
+        print("... and caching it.")
         with open(f"data\{const.LOAN_FILE}", 'w') as f:
             f.write(loan_json_data)
    
