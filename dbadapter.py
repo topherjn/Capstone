@@ -309,7 +309,9 @@ class DataAdapter:
         
         df = df.join(self.get_table_data(const.CC_TABLE), on='BRANCH_CODE')
         city = input("Enter branch city for transaction totals: ")
+        city = city.lower()
         
+        # this error-checks input for branches that don't exist
         if city in cities:
             df = df.where(col('BRANCH_CITY') == city)
             count = df.count()
