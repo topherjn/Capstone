@@ -30,6 +30,7 @@ dbsecrets.py
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+*.code-workspace
 
 # Environment
 .env
