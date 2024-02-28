@@ -13,6 +13,10 @@ def clear_screen():
     else:
         system('clear')
 
+def make_timeid(year, month, day):
+    timeid = str(year) + str(month).rjust(2,'0') + str(day).rjust(2,'0')
+    return timeid
+
 # restrict user input to integers
 def get_integer(prompt):
     value = input(prompt)
@@ -23,15 +27,67 @@ def get_integer(prompt):
         return get_integer(prompt)
     
 def do_totals_by_category():
+    clear_screen()
     category = input("Get counts and totals for transactions in which category? ")
     data_adapter = db.DataAdapter()
     data_adapter.get_transaction_totals_by_category(category)
     data_adapter.close()
 
 def do_totals_by_branch():
+    clear_screen()
     data_adapter = db.DataAdapter()
     data_adapter.get_transaction_totals_by_branch()
     data_adapter.close() 
+
+def do_update_customer_details():
+    clear_screen()
+    ssn = get_integer("Update the details of which customer (SSN)? ")
+    data_adapter = db.DataAdapter()
+    data_adapter.update_customer_details(ssn)
+    data_adapter.close() 
+
+def do_customer_transactions_date_range():
+    clear_screen()
+    ccn = get_integer("Enter the ssn for the transaction report: ")
+    months = list(cal.month_name)
+    for i, m in enumerate(months):
+        if i > 0:
+            print(i, m)
+
+    start_month = get_integer("Enter the menu number for the start month in the range: ")
+    while start_month not in range(1, 13):
+        start_month = int(input("Invalid month.  Enter the menu number for the start month in the range: "))
+    start_year = get_integer(f"{months[start_month]} of which year? ")
+    start_day = get_integer(f"What day in {months[start_month]}? ")
+
+    end_month = get_integer("Enter the menu number for the end month in the range: ")
+    while end_month not in range(1, 13):
+        end_month = int(input("Invalid month.  Enter the menu number for the end month in the range: "))
+    end_year = get_integer(f"{months[end_month]} of which year? ")
+    end_day = get_integer(f"What day in {months[end_month]}? ")
+
+    start = make_timeid(start_year, start_month, start_day)
+    end = make_timeid(end_year, end_month, end_day)
+
+    data_adapter = db.DataAdapter()
+    data_adapter.generate_transaction_report(ccn, start, end )
+    data_adapter.close()
+
+
+def do_generate_bill():
+    clear_screen()
+    ccn = get_integer("Enter the credit card number for which to generate a bill: ")
+    year = get_integer("Enter the year of the bill: ")
+    months = list(cal.month_name)
+    for i, m in enumerate(months):
+        if i > 0:
+            print(i, m)
+
+    month = get_integer("Which month? ")
+
+    data_adapter = db.DataAdapter()
+    data_adapter.generate_cc_bill(str(ccn),month,year)
+    data_adapter.close()
 
 def do_transactions_query():
     # Req-2.1
@@ -81,17 +137,32 @@ def do_transactions_query():
 def do_customer_details():
     ssn = get_integer("Enter the social security number for the customer (no dashes): ")
     data_adapter = db.DataAdapter()
-    data_adapter.get_customer_details(ssn)
+    df = data_adapter.get_customer_details(ssn)
+    df.show()
     data_adapter.close()
 
 def do_menu():
-
-    print("Tasks Menu")
-
+    
     option = None
-
+    options_dict = {}
+    options_dict[1] = "Get a list of transactions by zip, month, and year"
+    options_dict[2] = "Get transaction totals by category"
+    options_dict[3] = "Get transaction totals by branch"
+    options_dict[4] = "Get customer details"
+    options_dict[5] = "Update customer details"
+    options_dict[6] = "Generate Credit Card Bill"
+    options_dict[7] = "Get customer transactions in date range"
+    flag = False
     while not option==0:
-
+        if not flag:
+            flag = True
+        else:
+            input("Type Enter to continue: ")
+        clear_screen()
+        print("Tasks Menu")
+        for key, value in options_dict.items():
+            print(f'[{key}] - {str(value)}')
+        
         option = get_integer("Type a number to perform one of the above tasks, 0 to exit: ")
 
         match option:
@@ -99,13 +170,9 @@ def do_menu():
             case 2: do_totals_by_category()
             case 3: do_totals_by_branch()
             case 4: do_customer_details()
-
-    '''we need a loop that offers all the options
-       keep asking for all the options until exit
-       request
-       create a function for each task above? probably
-       todo next - get the list of tasks bn 
-    '''
+            case 5: do_update_customer_details()
+            case 6: do_generate_bill()
+            case 7: do_customer_transactions_date_range()
 
 if __name__ == "__main__":
     do_menu()

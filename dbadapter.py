@@ -226,26 +226,31 @@ class DataAdapter:
     # 3) Used to generate a monthly bill for a credit card number for a given month and year.
     # Hint: What does YOUR monthly credit card bill look like?  What structural components 
     # does it have?  Not just a total $ for the month, right?
-
     def generate_cc_bill(self, ccn, month, year):
-        # construct the where parameter
-        timeid = str(year) + str(month) + "%"
+        # construct where clause
+        timeid = str(year) + str(month).rjust(2,'0') + "%"
         # in order just to get customer name we have to join
         df = self.get_table_data(const.CC_TABLE)
-        df=df.join(self.get_table_data(const.CUSTOMER_TABLE),on ='CREDIT_CARD_NO')
+        df = df.withColumnRenamed('CUST_SSN','SSN')
+        cust_df = self.get_table_data(const.CUSTOMER_TABLE)
+        cust_df = cust_df.select('SSN','FIRST_NAME','LAST_NAME')
+        
+        df=df.join(cust_df,on ='SSN')
         df = df.where(col('CREDIT_CARD_NO')==ccn)
         df = df.where(col('TIMEID').like(timeid))
-        print(f"Transaction summary for credit card number: {ccn}\nFor customer:")
-        df.select('FIRST_NAME','LAST_NAME').distinct().show()
-        # print out a summary for the month
-        print(f"Activity for {month} {year}:")
-        df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show()
-        # total bill for the month
-        print("Total charges")
-        total_charges = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
-        print(round(float(total_charges['sum(TRANSACTION_VALUE)']),2))
+        if not df.rdd.isEmpty():
+            print(f"Transaction summary for credit card number: {ccn}\nFor customer:")
+            df.select('FIRST_NAME','LAST_NAME').distinct().show()
+            # print out a summary for the month
+            print(f"Activity for {month} {year}:")
+            df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show()
+            # total bill for the month
+            print("Total charges")
+            total_charges = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
+            print(round(float(total_charges['sum(TRANSACTION_VALUE)']),2))
+        else:
+            print("No results")
         
-
     # 4) Used to display the transactions made by a customer between two dates.
     # Order by year, month, and day in descending order.
     def generate_transaction_report(self, ssn, start, end):
@@ -300,9 +305,9 @@ if __name__ == "__main__":
 
     data_adapter = DataAdapter()
 
-    # data_adapter.generate_cc_bill('4210653349028689','01','2018')
-    #data_adapter.update_customer_details(123451152)
-    data_adapter.get_transaction_totals_by_category("gfdsafAs")
+    data_adapter.generate_cc_bill('4210653349028689','01','2018')
+    # #data_adapter.update_customer_details(123451152)
+    # data_adapter.get_transaction_totals_by_category("gfdsafAs")
 
 
     # data_adapter.generate_transaction_report(123451152,20180101,20180415)
