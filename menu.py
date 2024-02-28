@@ -21,9 +21,19 @@ def get_integer(prompt):
     except ValueError:
         print(f"{value} invalid: Try again.")
         return get_integer(prompt)
+    
+def do_totals_by_category():
+    category = input("Get counts and totals for transactions in which category? ")
+    data_adapter = db.DataAdapter()
+    data_adapter.get_transaction_totals_by_category(category)
+    data_adapter.close()
 
+def do_totals_by_branch():
+    data_adapter = db.DataAdapter()
+    data_adapter.get_transaction_totals_by_branch()
+    data_adapter.close() 
 
-def transactions_query():
+def do_transactions_query():
     # Req-2.1
 
     # 2.1.1 - Prompt the user for a zip code, provide contextual cues for valid input, and verify it is in the
@@ -68,6 +78,11 @@ def transactions_query():
 
     data_adapter.close()
 
+def do_customer_details():
+    ssn = get_integer("Enter the social security number for the customer (no dashes): ")
+    data_adapter = db.DataAdapter()
+    data_adapter.get_customer_details(ssn)
+    data_adapter.close()
 
 def do_menu():
 
@@ -76,10 +91,14 @@ def do_menu():
     option = None
 
     while not option==0:
-        option = get_integer("Type a number to perform one of the following tasks, 0 to exit: ")
 
-        if option == 1:
-            transactions_query()
+        option = get_integer("Type a number to perform one of the above tasks, 0 to exit: ")
+
+        match option:
+            case 1: do_transactions_query()
+            case 2: do_totals_by_category()
+            case 3: do_totals_by_branch()
+            case 4: do_customer_details()
 
     '''we need a loop that offers all the options
        keep asking for all the options until exit

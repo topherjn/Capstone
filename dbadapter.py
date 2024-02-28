@@ -271,9 +271,23 @@ class DataAdapter:
         else:
             print(f"No such category {category} in {categories} ")
 
-    def get_transaction_totals_by_branch(self, branch):
-        pass
-
+    def get_transaction_totals_by_branch(self):
+        df = self.get_table_data(const.BRANCH_TABLE)
+        df = df.select("BRANCH_CITY","BRANCH_CODE")
+        cities = []
+        for item in df.select('BRANCH_CITY').collect():
+            cities.append(item[0].lower())
+        df = df.join(self.get_table_data(const.CC_TABLE), on='BRANCH_CODE')
+        city = input("Enter branch city for transaction totals: ")
+        if city in cities:
+            df = df.where(col('BRANCH_CITY') == city)
+            count = df.count()
+            total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
+            print(f"Total value of {count} transactions from {city} branch: ")
+            print(round(float(total['sum(TRANSACTION_VALUE)']),2))
+        else: 
+            print(f"No branch in {city}")
+        
     def close(self):
         self.session.stop()
 
