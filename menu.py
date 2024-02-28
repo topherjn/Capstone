@@ -134,6 +134,7 @@ def do_transactions_query():
 
     data_adapter.close()
 
+# get the ssn for customer then call that data adapter
 def do_customer_details():
     ssn = get_integer("Enter the social security number for the customer (no dashes): ")
     data_adapter = db.DataAdapter()
@@ -141,6 +142,7 @@ def do_customer_details():
     df.show()
     data_adapter.close()
 
+# provides a list of tasks enumerated so user interaction is more efficient
 def do_menu():
     
     option = None
@@ -152,19 +154,26 @@ def do_menu():
     options_dict[5] = "Update customer details"
     options_dict[6] = "Generate Credit Card Bill"
     options_dict[7] = "Get customer transactions in date range"
+    
+    # this flag is just to make press enter idempotent
     flag = False
     while not option==0:
+        # don't prompt to hit enter on first run
         if not flag:
             flag = True
         else:
             input("Type Enter to continue: ")
         clear_screen()
+
+        # use the dict created above to present the options
         print("Tasks Menu")
         for key, value in options_dict.items():
             print(f'[{key}] - {str(value)}')
         
+        # get the option from the user
         option = get_integer("Type a number to perform one of the above tasks, 0 to exit: ")
 
+        # launch the chosen option
         match option:
             case 1: do_transactions_query()
             case 2: do_totals_by_category()

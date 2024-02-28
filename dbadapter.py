@@ -12,31 +12,35 @@ findspark.init()
 class DataAdapter:
     # constructor sets up MySQL and Spark connectors
     def __init__(self):
+
+        # data adapter has its own MySQL connector
         self.conn = mysql.connector.connect(
             host="localhost",
             user=secrets.mysql_username,
             passwd=secrets.mysql_password,
         )
 
-        self.session_properties = {
-            'user': secrets.mysql_username,
-            'password': secrets.mysql_password,
-            'host': const.DB_URL,
-            'driver': 'const.DB_DRIVER',
-            'database': const.DATABASE_NAME
-        }
+        # has its own Spark session properties if need
+        # self.session_properties = {
+        #     'user': secrets.mysql_username,
+        #     'password': secrets.mysql_password,
+        #     'host': const.DB_URL,
+        #     'driver': 'const.DB_DRIVER',
+        #     'database': const.DATABASE_NAME
+        # }
 
+        # has its own pyspark session
         self.session = SparkSession \
             .builder \
             .appName("capstone") \
             .master("local[*]") \
             .getOrCreate()
 
-        self.session.sparkContext.setLogLevel("ERROR")
-
+        # store the main MySQL database here, probably not
+        # needed
         self.database_name = const.DATABASE_NAME
 
-    # just for info delete?
+    # just for debugging
     def get_config_info(self):
         config = self.session.sparkContext.getConf().getAll()
         for item in config:
@@ -46,6 +50,7 @@ class DataAdapter:
     def create_database(self):
         command = f"DROP DATABASE IF EXISTS {self.database_name}"
         cursor = self.conn.cursor()
+
         # Create database
         cursor.execute(command)
         
@@ -58,6 +63,7 @@ class DataAdapter:
 
     # create a mysql table from a Spark dataframe
     def create_table(self, df, table_name):
+
         # print(f"{const.DB_URL}/{self.database_name}")
         df.write.format("jdbc") \
             .mode("overwrite") \
@@ -183,18 +189,19 @@ class DataAdapter:
         return df
 
     # 2) Used to modify the existing account details of a customer.
-    # get all details in a data object, change, then save whole thing back
     def update_customer_record(self, field, val, ssn):
 
         cursor = self.conn.cursor()
         cursor.execute(f"use {const.DATABASE_NAME}")
 
         command = f"UPDATE {const.CUSTOMER_TABLE} SET {field}='{val}',LAST_UPDATED=NOW() WHERE SSN='{ssn}'"
-        print(command)
+        # print(command) for debugging
         cursor.execute(command)
         cursor.close()
         self.conn.commit()
 
+    # before you change details you read them
+    # creates an update statement from user interaction
     def update_customer_details(self, ssn):
         details = self.get_customer_details(ssn)
         details = details.select('FIRST_NAME','MIDDLE_NAME','LAST_NAME',
@@ -205,6 +212,8 @@ class DataAdapter:
 
         fields = details.columns
 
+        # since this is a console app using an option interaction loop
+        # to allow changing multiple values, but only one at a time
         print("Which of the above fields would you like to update?")
         field = input("Please type the exact column name: ")
 
@@ -227,23 +236,33 @@ class DataAdapter:
     # Hint: What does YOUR monthly credit card bill look like?  What structural components 
     # does it have?  Not just a total $ for the month, right?
     def generate_cc_bill(self, ccn, month, year):
-        # construct where clause
+        # construct where clause value (by time)
         timeid = str(year) + str(month).rjust(2,'0') + "%"
+
         # in order just to get customer name we have to join
         df = self.get_table_data(const.CC_TABLE)
+
+        # names for join on not same so rename one
         df = df.withColumnRenamed('CUST_SSN','SSN')
         cust_df = self.get_table_data(const.CUSTOMER_TABLE)
         cust_df = cust_df.select('SSN','FIRST_NAME','LAST_NAME')
         
+        # the join
         df=df.join(cust_df,on ='SSN')
         df = df.where(col('CREDIT_CARD_NO')==ccn)
         df = df.where(col('TIMEID').like(timeid))
+
+        # if the user is looking for something that doesn't exist
+        # then this part is skipped.  Save on typos and other
+        # user-input gibberish too
         if not df.rdd.isEmpty():
             print(f"Transaction summary for credit card number: {ccn}\nFor customer:")
             df.select('FIRST_NAME','LAST_NAME').distinct().show()
+
             # print out a summary for the month
             print(f"Activity for {month} {year}:")
             df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show()
+
             # total bill for the month
             print("Total charges")
             total_charges = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
@@ -261,12 +280,14 @@ class DataAdapter:
         df = df.sort("TIMEID",ascending=False)
         df.show()
 
+    # this returns transaction totals by 'transaction type'
     def get_transaction_totals_by_category(self, category):
         df = self.get_table_data(const.CC_TABLE)
         categories = []
         for item in df.select('TRANSACTION_TYPE').distinct().collect():
             categories.append(item[0].lower())
 
+        # will not crash on nonsense categories
         if category.lower() in categories:
             df = df.where(col("TRANSACTION_TYPE") == category)
             count = df.count()
@@ -276,14 +297,19 @@ class DataAdapter:
         else:
             print(f"No such category {category} in {categories} ")
 
+    # one branch per city, so using that to calculate 
+    # transaction totals
     def get_transaction_totals_by_branch(self):
         df = self.get_table_data(const.BRANCH_TABLE)
         df = df.select("BRANCH_CITY","BRANCH_CODE")
+        
         cities = []
         for item in df.select('BRANCH_CITY').collect():
             cities.append(item[0].lower())
+        
         df = df.join(self.get_table_data(const.CC_TABLE), on='BRANCH_CODE')
         city = input("Enter branch city for transaction totals: ")
+        
         if city in cities:
             df = df.where(col('BRANCH_CITY') == city)
             count = df.count()
@@ -297,6 +323,7 @@ class DataAdapter:
         self.session.stop()
 
 if __name__ == "__main__":
+    '''testing statements'''
     # data_adapter = DataAdapter()
 
     # data_adapter.get_specified_transactions('55044', '02', '2018')
