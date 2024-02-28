@@ -204,33 +204,41 @@ class DataAdapter:
     # creates an update statement from user interaction
     def update_customer_details(self, ssn):
         details = self.get_customer_details(ssn)
-        details = details.select('FIRST_NAME','MIDDLE_NAME','LAST_NAME',
-                                 'FULL_STREET_ADDRESS','CUST_CITY','CUST_STATE',
-                                 'CUST_COUNTRY','CUST_ZIP','CUST_PHONE')
-        print("Current values:")
-        details.show()
+        # only try to get details on existing customers
+        if not details.rdd.isEmpty():
+            details = details.select('FIRST_NAME','MIDDLE_NAME','LAST_NAME',
+                                    'FULL_STREET_ADDRESS','CUST_CITY','CUST_STATE',
+                                    'CUST_COUNTRY','CUST_ZIP','CUST_PHONE')
+            print("Current values:")
+            details.show()
 
-        fields = details.columns
+            fields = details.columns
+            fields.append('quit')
 
-        # since this is a console app using an option interaction loop
-        # to allow changing multiple values, but only one at a time
-        print("Which of the above fields would you like to update?")
-        field = input("Please type the exact column name: ")
-
-        while field.upper() != 'QUIT':
-
-            while not field.upper() in fields:
-                print("Try again.")
-                field = input("Please type the exact column name or 'quit': ")
-
-            if field.upper() != 'QUIT':
-                field = field.upper()
-                
-                val = input("What value do you want to change the field to? ")
-                self.update_customer_record(field=field,val=val, ssn=ssn)
-
+            # since this is a console app using an option interaction loop
+            # to allow changing multiple values, but only one at a time
             print("Which of the above fields would you like to update?")
-            field = input("Please type the exact column name or 'quit': ")
+            field = input("Please type the exact column name: ")
+            print(field)
+
+            while field.lower() != 'quit':
+
+                while not field.lower() in fields:
+                    print("Try again.")
+                    field = input("Please type the exact column name or 'quit': ")
+                    print(field)
+
+                if field.lower() != 'quit':
+                    field = field.lower()
+                    
+                    val = input("What value do you want to change the field to? ")
+                    self.update_customer_record(field=field,val=val, ssn=ssn)
+
+                print("Which of the above fields would you like to update?")
+                field = input("Please type the exact column name or 'quit': ")
+                print(field)
+        else: 
+            print(f"Customer {ssn} does not exist.")
 
     # 3) Used to generate a monthly bill for a credit card number for a given month and year.
     # Hint: What does YOUR monthly credit card bill look like?  What structural components 

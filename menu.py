@@ -149,7 +149,13 @@ def do_customer_details():
     ssn = get_integer("Enter the social security number for the customer (no dashes): ")
     data_adapter = db.DataAdapter()
     df = data_adapter.get_customer_details(ssn)
-    df.show()
+    
+    # show only customers who exist
+    if not df.rdd.isEmpty():
+        df.show()
+    else:
+        print(f"Customer {ssn} does not exist.")
+
     data_adapter.close()
 
 # provides a list of tasks enumerated so user interaction is more efficient
