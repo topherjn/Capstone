@@ -251,7 +251,7 @@ class DataAdapter:
         df=df.join(cust_df,on ='SSN')
         df = df.where(col('CREDIT_CARD_NO')==ccn)
         df = df.where(col('TIMEID').like(timeid))
-
+        
         # if the user is looking for something that doesn't exist
         # then this part is skipped.  Save on typos and other
         # user-input gibberish too

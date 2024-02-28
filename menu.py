@@ -13,6 +13,8 @@ def clear_screen():
     else:
         system('clear')
 
+# created finally to modularize turning month, day, year into 
+# "TIMEID" need to go back and factor to use in all places needed
 def make_timeid(year, month, day):
     timeid = str(year) + str(month).rjust(2,'0') + str(day).rjust(2,'0')
     return timeid
@@ -25,7 +27,8 @@ def get_integer(prompt):
     except ValueError:
         print(f"{value} invalid: Try again.")
         return get_integer(prompt)
-    
+
+# get the category from the user then call the function
 def do_totals_by_category():
     clear_screen()
     category = input("Get counts and totals for transactions in which category? ")
@@ -33,12 +36,14 @@ def do_totals_by_category():
     data_adapter.get_transaction_totals_by_category(category)
     data_adapter.close()
 
+# no use input needed here
 def do_totals_by_branch():
     clear_screen()
     data_adapter = db.DataAdapter()
     data_adapter.get_transaction_totals_by_branch()
     data_adapter.close() 
 
+# just need the ssn for this
 def do_update_customer_details():
     clear_screen()
     ssn = get_integer("Update the details of which customer (SSN)? ")
@@ -46,6 +51,8 @@ def do_update_customer_details():
     data_adapter.update_customer_details(ssn)
     data_adapter.close() 
 
+# get the cc#, start time and end time and show the transactions
+# in that range
 def do_customer_transactions_date_range():
     clear_screen()
     ccn = get_integer("Enter the ssn for the transaction report: ")
@@ -54,6 +61,7 @@ def do_customer_transactions_date_range():
         if i > 0:
             print(i, m)
 
+    # this could probably be modularized but not bothering because of the limited uses
     start_month = get_integer("Enter the menu number for the start month in the range: ")
     while start_month not in range(1, 13):
         start_month = int(input("Invalid month.  Enter the menu number for the start month in the range: "))
@@ -73,7 +81,9 @@ def do_customer_transactions_date_range():
     data_adapter.generate_transaction_report(ccn, start, end )
     data_adapter.close()
 
-
+# get the cc# year and month 
+# and this will show customer name, transactions with categories,
+# and total for the month
 def do_generate_bill():
     clear_screen()
     ccn = get_integer("Enter the credit card number for which to generate a bill: ")
