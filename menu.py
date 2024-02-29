@@ -163,7 +163,7 @@ def do_menu():
     
     option = None
     options_dict = {}
-    options_dict[1] = "Get a list of transactions by zip, month, and year"
+    options_dict[1] = "Get a list of transactions by ZIP, month, and year"
     options_dict[2] = "Get transaction totals by category"
     options_dict[3] = "Get transaction totals by branch"
     options_dict[4] = "Get customer details"
