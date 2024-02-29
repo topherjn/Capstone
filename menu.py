@@ -3,6 +3,7 @@ from os import system, name
 import findspark
 from build_database import build_database
 import dbadapter as db
+import utils as ut
 
 findspark.init()
 
@@ -12,12 +13,6 @@ def clear_screen():
         system('cls')
     else:
         system('clear')
-
-# created finally to modularize turning month, day, year into 
-# "TIMEID" need to go back and factor to use in all places needed
-def make_timeid(year, month, day):
-    timeid = str(year) + str(month).rjust(2,'0') + str(day).rjust(2,'0')
-    return timeid
 
 # restrict user input to integers
 def get_integer(prompt):
@@ -74,8 +69,8 @@ def do_customer_transactions_date_range():
     end_year = get_integer(f"{months[end_month]} of which year? ")
     end_day = get_integer(f"What day in {months[end_month]}? ")
 
-    start = make_timeid(start_year, start_month, start_day)
-    end = make_timeid(end_year, end_month, end_day)
+    start = ut.make_timeid(start_year, start_month, start_day)
+    end = ut.make_timeid(end_year, end_month, end_day)
 
     data_adapter = db.DataAdapter()
     data_adapter.generate_transaction_report(ccn, start, end )
