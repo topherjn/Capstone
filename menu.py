@@ -14,15 +14,6 @@ def clear_screen():
     else:
         system('clear')
 
-# restrict user input to integers
-def get_integer(prompt):
-    value = input(prompt)
-    try:
-        return int(value)
-    except ValueError:
-        print(f"{value} invalid: Try again.")
-        return get_integer(prompt)
-
 # get the category from the user then call the function
 def do_totals_by_category():
     clear_screen()
@@ -41,7 +32,7 @@ def do_totals_by_branch():
 # just need the ssn for this
 def do_update_customer_details():
     clear_screen()
-    ssn = get_integer("Update the details of which customer (SSN)? ")
+    ssn = ut.get_integer("Update the details of which customer (SSN)? ")
     data_adapter = db.DataAdapter()
     data_adapter.update_customer_details(ssn)
     data_adapter.close() 
@@ -50,24 +41,24 @@ def do_update_customer_details():
 # in that range
 def do_customer_transactions_date_range():
     clear_screen()
-    ccn = get_integer("Enter the ssn for the transaction report: ")
+    ccn = ut.get_integer("Enter the ssn for the transaction report: ")
     months = list(cal.month_name)
     for i, m in enumerate(months):
         if i > 0:
             print(i, m)
 
     # this could probably be modularized but not bothering because of the limited uses
-    start_month = get_integer("Enter the menu number for the start month in the range: ")
+    start_month = ut.get_integer("Enter the menu number for the start month in the range: ")
     while start_month not in range(1, 13):
         start_month = int(input("Invalid month.  Enter the menu number for the start month in the range: "))
-    start_year = get_integer(f"{months[start_month]} of which year? ")
-    start_day = get_integer(f"What day in {months[start_month]}? ")
+    start_year = ut.get_integer(f"{months[start_month]} of which year? ")
+    start_day = ut.get_integer(f"What day in {months[start_month]}? ")
 
-    end_month = get_integer("Enter the menu number for the end month in the range: ")
+    end_month = ut.get_integer("Enter the menu number for the end month in the range: ")
     while end_month not in range(1, 13):
         end_month = int(input("Invalid month.  Enter the menu number for the end month in the range: "))
-    end_year = get_integer(f"{months[end_month]} of which year? ")
-    end_day = get_integer(f"What day in {months[end_month]}? ")
+    end_year = ut.get_integer(f"{months[end_month]} of which year? ")
+    end_day = ut.get_integer(f"What day in {months[end_month]}? ")
 
     start = ut.make_timeid(start_year, start_month, start_day)
     end = ut.make_timeid(end_year, end_month, end_day)
@@ -81,14 +72,14 @@ def do_customer_transactions_date_range():
 # and total for the month
 def do_generate_bill():
     clear_screen()
-    ccn = get_integer("Enter the credit card number for which to generate a bill: ")
-    year = get_integer("Enter the year of the bill: ")
+    ccn = ut.get_integer("Enter the credit card number for which to generate a bill: ")
+    year = ut.get_integer("Enter the year of the bill: ")
     months = list(cal.month_name)
     for i, m in enumerate(months):
         if i > 0:
             print(i, m)
 
-    month = get_integer("Which month? ")
+    month = ut.get_integer("Which month? ")
 
     data_adapter = db.DataAdapter()
     data_adapter.generate_cc_bill(str(ccn),month,year)
@@ -119,18 +110,18 @@ def do_transactions_query():
             print(i, m)
 
     # check user month input
-    month = get_integer("Enter the menu number for the month you want to query: ")
+    month = ut.get_integer("Enter the menu number for the month you want to query: ")
     while month not in range(1, 13):
         month = int(input("Invalid month.  Enter the menu number for the month you want to query: "))
         
     # get the year from user
     clear_screen()
-    year = get_integer(f"{months[month]} of which year? ")
+    year = ut.get_integer(f"{months[month]} of which year? ")
 
     # restrict year to 2018
     while year != 2018:
         print("No transaction data for that year.  Try again: ")
-        year = get_integer(f"{months[month]} of which year? ")
+        year = ut.get_integer(f"{months[month]} of which year? ")
 
     # all dataabase operations are performed by this object
     data_adapter = db.DataAdapter()
@@ -141,7 +132,7 @@ def do_transactions_query():
 
 # get the ssn for customer then call that data adapter
 def do_customer_details():
-    ssn = get_integer("Enter the social security number for the customer (no dashes): ")
+    ssn = ut.get_integer("Enter the social security number for the customer (no dashes): ")
     data_adapter = db.DataAdapter()
     df = data_adapter.get_customer_details(ssn)
     
@@ -182,7 +173,7 @@ def do_menu():
             print(f'[{key}] - {str(value)}')
         
         # get the option from the user
-        option = get_integer("Type a number to perform one of the above tasks, 0 to exit: ")
+        option = ut.get_integer("Type a number to perform one of the above tasks, 0 to exit: ")
 
         # launch the chosen option
         match option:

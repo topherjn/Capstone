@@ -3,3 +3,12 @@
 def make_timeid(year, month, day):
     timeid = str(year) + str(month).rjust(2,'0') + str(day).rjust(2,'0')
     return timeid
+
+# restrict user input to integers
+def get_integer(prompt):
+    value = input(prompt)
+    try:
+        return int(value)
+    except ValueError:
+        print(f"{value} invalid: Try again.")
+        return get_integer(prompt)
