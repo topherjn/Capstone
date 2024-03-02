@@ -28,7 +28,7 @@ Tasks Menu
 [3] - Get transaction totals by branch
 [4] - Get customer details
 [5] - Update customer details
-[6] - Generate Credit Card Bill
+[6] - Generate credit card bill
 [7] - Get customer transactions in date range
 Type a number to perform one of the above tasks, 0 to exit:
 ```
