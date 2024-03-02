@@ -4,6 +4,7 @@ from pyspark.sql.functions import col
 import mysql.connector
 import constants as const
 import dbsecrets as secrets
+import utils as ut
 
 findspark.init()
 
@@ -230,7 +231,7 @@ class DataAdapter:
     # does it have?  Not just a total $ for the month, right?
     def generate_cc_bill(self, ccn, month, year):
         # construct where clause value (by time)
-        timeid = str(year) + str(month).rjust(2,'0') + "%"
+        timeid = ut.make_timeid(year,month,0) + "%"
 
         # in order just to get customer name we have to join
         df = self.get_table_data(const.CC_TABLE)
