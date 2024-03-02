@@ -33,10 +33,13 @@ Tasks Menu
 Type a number to perform one of the above tasks, 0 to exit:
 ```
 
-The menu module contains methods to execute each option.
+The menu module contains methods to execute each option.  There is also a [utility module](./utils.py) to handle a couple of common tasks in this application: converting dates to TIMEIDs and restricting user input to whole numbers.
 
 #### Data Analysis and Visualization
 
+Using Microsoft [Power BI](https://https://www.microsoft.com/en-us/power-platform/products/power-bi/), we conducted several analyses of the data:
+
+1. 
 
 
 #### Functional Requirements - LOAN Application Dataset
