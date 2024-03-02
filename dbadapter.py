@@ -19,16 +19,7 @@ class DataAdapter:
             user=secrets.mysql_username,
             passwd=secrets.mysql_password,
         )
-
-        # has its own Spark session properties if need
-        # self.session_properties = {
-        #     'user': secrets.mysql_username,
-        #     'password': secrets.mysql_password,
-        #     'host': const.DB_URL,
-        #     'driver': 'const.DB_DRIVER',
-        #     'database': const.DATABASE_NAME
-        # }
-
+        
         # has its own pyspark session
         self.session = SparkSession \
             .builder \
