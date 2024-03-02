@@ -13,7 +13,7 @@ In the [Jira sprints](./Jira/) we learned how to implement Scrum methodology and
 
 The data for the credit card database were given to us in the form of three JSON files with data on [bank branches](./data/cdw_sapp_branch.json), credit-card [customers](./data/cdw_sapp_custmer.json), and credit-card [transactions](./data/cdw_sapp_credit.json) that we downloaded ahead of time.
 
-In my solution I wrote modules using Python, PySpark, the MySQL connector for Python, and SQL to read the data from these files, transform those data according to specific mapping rules, and write those data to three tables in a locally-running instance of the MySQL RDBMS.
+In my solution I wrote modules using Python, PySpark, the MySQL connector for Python, and SQL to read the data from these files, transform those data according to [specific mapping rules](https://docs.google.com/spreadsheets/d/1t8UxBrUV6dxx0pM1VIIGZpSf4IKbzjdJ/edit#gid=672931242), and write those data to three tables in a locally-running instance of the MySQL RDBMS.
 
 At application start, the module to [build the database](./build_database.py) is called first.  The build_database module will call a [module for reading data](./cdw_data_reader.py) from JSON files to get the data into a suitable format for transforming and writing it to the database, that latter accomplished by using [data adapter class](./dbadapter.py) whose purpose is to perform all database operations, such as creating the database, creating tables, and CRUD operations, including reading data from tables into PySpark dataframe objects.  
 
@@ -35,9 +35,15 @@ Type a number to perform one of the above tasks, 0 to exit:
 
 The menu module contains methods to execute each option.  There is also a [utility module](./utils.py) to handle a couple of common tasks in this application: converting dates to TIMEIDs and restricting user input to whole numbers.
 
+#### Functional Requirements - Loan Application Dataset
+
+Loan application data were also provided in the form of a RESTful JSON Web service [endpoint](https://raw.githubusercontent.com/platformps/LoanDataset/main/loan_data.json).  These data were read into the application by slightly tweaking the [JSON reader](./cdw_data_reader.py) module mentioned earlier.  From there, the process of transforming and writing the data to the MySQL RDBMS were essentially the same as used on the credit-card data.
+
+The primary purpose of including the load application data was to serve as a way to showcase visualizations as seen in the next section.
+
 #### Data Analysis and Visualization
 
-Using Microsoft [Power BI](https://https://www.microsoft.com/en-us/power-platform/products/power-bi/), we conducted several analyses of the data:
+Using Microsoft [Power BI](https://www.microsoft.com/en-us/power-platform/products/power-bi/), we conducted several analyses of the data:
 
 ##### Credit Card data
 
@@ -70,8 +76,6 @@ Using Microsoft [Power BI](https://https://www.microsoft.com/en-us/power-platfor
 ###### Calculate and plot which branch processed the highest total dollar value of healthcare transactions. Use the ideal chart or graph to represent this data
 
 ![image info](./visualizations/Req5.5HighestTotalBranchHealth.png)
-
-#### Functional Requirements - LOAN Application Dataset
 
 ### Conclusion
 
