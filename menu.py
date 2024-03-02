@@ -168,7 +168,7 @@ def do_menu():
     options_dict[3] = "Get transaction totals by branch"
     options_dict[4] = "Get customer details"
     options_dict[5] = "Update customer details"
-    options_dict[6] = "Generate Credit Card Bill"
+    options_dict[6] = "Generate credit card bill"
     options_dict[7] = "Get customer transactions in date range"
     
     # this flag is just to make press enter idempotent
