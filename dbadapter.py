@@ -231,6 +231,7 @@ class DataAdapter:
         timeid = ut.make_timeid(year,month,0) + "%"
 
         # in order just to get customer name we have to join
+        query = f"SELECT * FROM {const.CC_TABLE} WHERE CREDIT_CARD_NO = {ccn}"
         df = self.get_table_data(const.CC_TABLE)
 
         # names for join on not same so rename one
