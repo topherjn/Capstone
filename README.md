@@ -21,7 +21,17 @@ At application start, the module to [build the database](./build_database.py) is
 
 Once translated from JSON, transformed, and written to MySQL tables, the data are then available for an end-user to query, which is effected by launching a [menu module](./menu.py) as soon as the build_database module is finished.  This module will offer the user a menu of choices encoded as numbers:
 
-
+```python
+Tasks Menu
+[1] - Get a list of transactions by ZIP, month, and year
+[2] - Get transaction totals by category
+[3] - Get transaction totals by branch
+[4] - Get customer details
+[5] - Update customer details
+[6] - Generate Credit Card Bill
+[7] - Get customer transactions in date range
+Type a number to perform one of the above tasks, 0 to exit:
+```
 
 1. Data Analysis and Visualization
 1. Functional Requirements = LOAN Application Dataset
