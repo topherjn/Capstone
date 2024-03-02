@@ -9,7 +9,7 @@ In the [Jira sprints](./Jira/) we learned how to implement Scrum methodology and
 
 ### Core Capstone Components
 
-1. Load Credit Card Database (SQL)
+#### Load Credit Card Database (SQL)
 
 The data for the credit card database were given to us in the form of three JSON files with data on [bank branches](./data/cdw_sapp_branch.json), credit-card [customers](./data/cdw_sapp_custmer.json), and credit-card [transactions](./data/cdw_sapp_credit.json) that we downloaded ahead of time.
 
@@ -17,7 +17,7 @@ In my solution I wrote modules using Python, PySpark, the MySQL connector for Py
 
 At application start, the module to [build the database](./build_database.py) is called first.  The build_database module will call a [module for reading data](./cdw_data_reader.py) from JSON files to get the data into a suitable format for transforming and writing it to the database, that latter accomplished by using [data adapter class](./dbadapter.py) whose purpose is to perform all database operations, such as creating the database, creating tables, and CRUD operations, including reading data from tables into PySpark dataframe objects.  
 
-1. Application Front-End
+#### Application Front-End
 
 Once translated from JSON, transformed, and written to MySQL tables, the data are then available for an end-user to query, which is effected by launching a [menu module](./menu.py) as soon as the build_database module is finished.  This module will offer the user a menu of choices encoded as numbers:
 
@@ -33,8 +33,9 @@ Tasks Menu
 Type a number to perform one of the above tasks, 0 to exit:
 ```
 
-1. Data Analysis and Visualization
-1. Functional Requirements = LOAN Application Dataset
+#### Data Analysis and Visualization
+
+#### Functional Requirements = LOAN Application Dataset
 
 ### Conclusion
 
