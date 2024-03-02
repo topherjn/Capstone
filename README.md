@@ -33,9 +33,13 @@ Tasks Menu
 Type a number to perform one of the above tasks, 0 to exit:
 ```
 
+The menu module contains methods to execute each option.
+
 #### Data Analysis and Visualization
 
-#### Functional Requirements = LOAN Application Dataset
+
+
+#### Functional Requirements - LOAN Application Dataset
 
 ### Conclusion
 
