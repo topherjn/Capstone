@@ -199,30 +199,27 @@ class DataAdapter:
             details.show()
 
             fields = details.columns
-            fields.append('quit')
+            fields.append('QUIT')
 
             # since this is a console app using an option interaction loop
             # to allow changing multiple values, but only one at a time
             print("Which of the above fields would you like to update?")
             field = input("Please type the exact column name: ")
-            print(field)
 
-            while field.lower() != 'quit':
+            while field.upper() != 'QUIT':
 
-                while not field.lower() in fields:
+                while not field.upper() in fields:
                     print("Try again.")
                     field = input("Please type the exact column name or 'quit': ")
-                    print(field)
 
-                if field.lower() != 'quit':
-                    field = field.lower()
+                if field.upper() != 'QUIT':
+                    field = field.upper()
                     
                     val = input("What value do you want to change the field to? ")
                     self.update_customer_record(field=field,val=val, ssn=ssn)
 
                 print("Which of the above fields would you like to update?")
                 field = input("Please type the exact column name or 'quit': ")
-                print(field)
         else: 
             print(f"Customer {ssn} does not exist.")
 
@@ -279,10 +276,10 @@ class DataAdapter:
         df = self.get_table_data(const.CC_TABLE)
         categories = []
         for item in df.select('TRANSACTION_TYPE').distinct().collect():
-            categories.append(item[0].lower())
+            categories.append(item[0].upper())
 
         # will not crash on nonsense categories
-        if category.lower() in categories:
+        if category.upper() in categories:
             df = df.where(col("TRANSACTION_TYPE") == category)
             count = df.count()
             total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
@@ -299,11 +296,11 @@ class DataAdapter:
         
         cities = []
         for item in df.select('BRANCH_CITY').collect():
-            cities.append(item[0].lower())
+            cities.append(item[0].upper())
         
         df = df.join(self.get_table_data(const.CC_TABLE), on='BRANCH_CODE')
         city = input("Enter branch city for transaction totals: ")
-        city = city.lower()
+        city = city.upper()
         
         # this error-checks input for branches that don't exist
         if city in cities:
