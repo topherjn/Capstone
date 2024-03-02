@@ -43,6 +43,12 @@ The primary purpose of including the load application data was to serve as a way
 
 #### Data Analysis and Visualization
 
+In preparation for analysis, the data in the MySQL RDBMS tables was extracted into CSV files:
+[branch table](./data/branch_table.csv)
+[credit card table](./data/credit_card_table.csv)
+[customer table](./data/customer_table.csv)
+[loan table](./data/loan_table.csv)
+
 Using Microsoft [Power BI](https://www.microsoft.com/en-us/power-platform/products/power-bi/), we conducted several analyses of the data:
 
 ##### Credit Card data
@@ -79,4 +85,21 @@ Using Microsoft [Power BI](https://www.microsoft.com/en-us/power-platform/produc
 
 ### Conclusion
 
+The value of this Capstone was its ability to call into action the most important knowledge and skill we learned in this course.  In order to accomplish all the tasks necessary it was necessarly to put to test our skills in Python, SQL, PySpark, and Power BI, not just indivdually, but in concert with each other.  The procedure from the inintial collection of data, cleansing that data, and figuring out how to find and present insight in it has given me an appreciation of the steps necessary to effictively work with data for any contexts and purposes.
+
 ### Appendix
+
+#### List of code files in the project
+
+1. [capstone_driver.py](./capstone_driver.py)
+1. [build_database.py](./build_database.py)
+1. [menu.py](./menu.py)
+1. [dbadapter.py](./dbadapter.py)
+1. [cdw_data_reader.py](./cdw_data_reader.py)
+1. [utils.py](./utils.py)
+1. [constants.py](./constants.py)
+1. [load_loan_data.py](./load_loan_data.py)
+
+#### Some references for guides that helped me with syntax
+
+1. [references.txt](./references.txt)
