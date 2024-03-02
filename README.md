@@ -15,9 +15,14 @@ The data for the credit card database were given to us in the form of three JSON
 
 In my solution I wrote modules using Python, PySpark, the MySQL connector for Python, and SQL to read the data from these files, transform those data according to specific mapping rules, and write those data to three tables in a locally-running instance of the MySQL RDBMS.
 
-At application start, the module to [build the database](./build_database.py) is called first.  This module calls an instance of a data adapter class I wrote whose purpose is to perform all database operations.  
+At application start, the module to [build the database](./build_database.py) is called first.  The build_database module will call a [module for reading data](./cdw_data_reader.py) from JSON files to get the data into a suitable format for transforming and writing it to the database, that latter accomplished by using [data adapter class](./dbadapter.py) whose purpose is to perform all database operations, such as creating the database, creating tables, and CRUD operations, including reading data from tables into PySpark dataframe objects.  
 
 1. Application Front-End
+
+Once translated from JSON, transformed, and written to MySQL tables, the data are then available for an end-user to query, which is effected by launching a [menu module](./menu.py) as soon as the build_database module is finished.  This module will offer the user a menu of choices encoded as numbers:
+
+
+
 1. Data Analysis and Visualization
 1. Functional Requirements = LOAN Application Dataset
 

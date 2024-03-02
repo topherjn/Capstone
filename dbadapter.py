@@ -19,7 +19,7 @@ class DataAdapter:
             user=secrets.mysql_username,
             passwd=secrets.mysql_password,
         )
-        
+
         # has its own pyspark session
         self.session = SparkSession \
             .builder \
@@ -30,12 +30,6 @@ class DataAdapter:
         # store the main MySQL database here, probably not
         # needed
         self.database_name = const.DATABASE_NAME
-
-    # just for debugging
-    def get_config_info(self):
-        config = self.session.sparkContext.getConf().getAll()
-        for item in config:
-            print(item)
 
     # create the capstone db
     def create_database(self):
