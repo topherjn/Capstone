@@ -184,6 +184,7 @@ def do_menu():
             case 5: do_update_customer_details()
             case 6: do_generate_bill()
             case 7: do_customer_transactions_date_range()
+            case _: print("Not an option.")
 
 if __name__ == "__main__":
     do_menu()
