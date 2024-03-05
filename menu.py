@@ -64,7 +64,10 @@ def do_customer_transactions_date_range():
     end = ut.make_timeid(end_year, end_month, end_day)
 
     data_adapter = db.DataAdapter()
-    data_adapter.generate_transaction_report(ccn, start, end )
+    if start <= end:
+        data_adapter.generate_transaction_report(ccn, start, end )
+    else:
+        print("Aborting: start date after end date")
     data_adapter.close()
 
 # get the cc# year and month 
