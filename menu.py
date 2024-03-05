@@ -141,7 +141,7 @@ def do_customer_details():
     
     # show only customers who exist
     if not df.rdd.isEmpty():
-        df.show()
+        df.show(n=df.count(),truncate=False)
     else:
         print(f"Customer {ssn} does not exist.")
 
