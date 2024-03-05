@@ -85,7 +85,7 @@ Using Microsoft [Power BI](https://www.microsoft.com/en-us/power-platform/produc
 
 ###### Comprehensive Dashboard
 
-![image info](./visualizations/dashbord.png)
+![image info](./visualizations/dashboard.png)
 
 
 ### Conclusion
