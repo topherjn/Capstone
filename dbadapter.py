@@ -284,8 +284,8 @@ class DataAdapter:
             df = df.where(col("TRANSACTION_TYPE") == category)
             count = df.count()
             total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
-            print(f"Total value of {count} transactions in category {category}: ")
-            print(round(float(total['sum(TRANSACTION_VALUE)']),2))
+            print(f"\n{count} transactions in category {category} for a total of ")
+            print(f"${round(float(total['sum(TRANSACTION_VALUE)']),2)}")
         else:
             print(f"No such category {category} in {categories} ")
 
