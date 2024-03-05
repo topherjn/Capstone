@@ -199,8 +199,6 @@ class DataAdapter:
             details.show(n=details.count(),truncate=False)
 
             fields = details.columns
-            fields.append('QUIT')
-
             # since this is a console app using an option interaction loop
             # to allow changing multiple values, but only one at a time
             print("Which of the above fields would you like to update?")
@@ -208,18 +206,17 @@ class DataAdapter:
 
             while field.upper() != 'QUIT':
 
-                while not field.upper() in fields:
-                    print("Try again.")
-                    field = input("Please type the exact column name or 'quit': ")
-
-                if field.upper() != 'QUIT':
-                    field = field.upper()
-                    
+                if field.upper() in fields:
+                
                     val = input("What value do you want to change the field to? ")
                     self.update_customer_record(field=field,val=val, ssn=ssn)
 
-                print("Which of the above fields would you like to update?")
+                    print("Which of the above fields would you like to update?")                
+                else:
+                    print(f"{field} is not a column in this table")
+                
                 field = input("Please type the exact column name or 'quit': ")
+
         else: 
             print(f"Customer {ssn} does not exist.")
 
