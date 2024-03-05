@@ -166,7 +166,7 @@ class DataAdapter:
 
         # display the results
         # TODO make legible?
-        combined_df.show()
+        combined_df.show(truncate=False)
        
     # 1) Used to check the existing account details of a customer.
     def get_customer_details(self, ssn):
@@ -196,7 +196,7 @@ class DataAdapter:
                                     'FULL_STREET_ADDRESS','CUST_CITY','CUST_STATE',
                                     'CUST_COUNTRY','CUST_ZIP','CUST_PHONE')
             print("Current values:")
-            details.show()
+            details.show(truncate=False)
 
             fields = details.columns
             fields.append('QUIT')
@@ -249,11 +249,11 @@ class DataAdapter:
         # user-input gibberish too
         if not df.rdd.isEmpty():
             print(f"Transaction summary for credit card number: {ccn}\nFor customer:")
-            df.select('FIRST_NAME','LAST_NAME').distinct().show()
+            df.select('FIRST_NAME','LAST_NAME').distinct().show(truncate=False)
 
             # print out a summary for the month
             print(f"Activity for {month} {year}:")
-            df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show()
+            df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show(truncate=False)
 
             # total bill for the month
             print("Total charges")
@@ -270,7 +270,7 @@ class DataAdapter:
         df = df.where(col("TIMEID").between(start,end))
         df.collect()
         df = df.sort("TIMEID",ascending=False)
-        df.show()
+        df.show(truncate=False)
 
     # this returns transaction totals by 'transaction type'
     def get_transaction_totals_by_category(self, category):
