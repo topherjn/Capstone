@@ -15,7 +15,7 @@ The data for the credit card database were given to us in the form of three JSON
 
 In my solution I wrote modules using Python, PySpark, the MySQL connector for Python, and SQL to read the data from these files, transform those data according to [specific mapping rules](https://docs.google.com/spreadsheets/d/1t8UxBrUV6dxx0pM1VIIGZpSf4IKbzjdJ/edit#gid=672931242), and write those data to three tables in a locally-running instance of the MySQL RDBMS.
 
-At application start, the module to [build the database](./build_database.py) is called first.  The build_database module will call a [module for reading data](./cdw_data_reader.py) from JSON files to get the data into a suitable format for transforming and writing it to the database, that latter accomplished by using [data adapter class](./dbadapter.py) whose purpose is to perform all database operations, such as creating the database, creating tables, and CRUD operations, including reading data from tables into PySpark dataframe objects.  
+At application start, the user is asked if he wants to rebuild the database.  If that has been done recently the user can choose to skip the build-the-database step, othewise the module to [build the database](./build_database.py) is called first.  The build_database module will call a [module for reading data](./cdw_data_reader.py) from JSON files to get the data into a suitable format for transforming and writing them to the database, that latter accomplished by using a [data adapter class](./dbadapter.py) whose purpose is to perform all database operations such as creating the database, creating tables, and CRUD operations, including reading data from tables into PySpark dataframe objects.  
 
 #### Application Front-End
 
@@ -25,7 +25,7 @@ Once translated from JSON, transformed, and written to MySQL tables, the data ar
 Tasks Menu
 [1] - Get a list of transactions by ZIP, month, and year
 [2] - Get transaction totals by category
-[3] - Get transaction totals by branch
+[3] - Get transaction totals for branches in a state
 [4] - Get customer details
 [5] - Update customer details
 [6] - Generate credit card bill
