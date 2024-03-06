@@ -16,3 +16,6 @@ def get_integer(prompt):
     except ValueError:
         print(f"{value} invalid: Try again.")
         return get_integer(prompt)
+    except Exception:
+        print(f"Some other error occured. Exiting ...")
+        exit()
