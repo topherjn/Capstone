@@ -106,4 +106,4 @@ The value of this Capstone was its ability to call into action the most importan
 
 #### Some references for guides that helped me with syntax
 
-1. [references.txt](./references.txt)
+[references.txt](./references.txt)
