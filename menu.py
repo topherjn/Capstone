@@ -1,5 +1,4 @@
 import calendar as cal
-from os import system, name
 import findspark
 from build_database import build_database
 import dbadapter as db
@@ -8,16 +7,9 @@ import utils as ut
 
 findspark.init()
 
-# make clear screen platform agnostic-ish
-def clear_screen():
-    if name == 'nt':
-        system('cls')
-    else:
-        system('clear')
-
 # get the category from the user then call the function
 def do_totals_by_category():
-    clear_screen()
+    ut.clear_screen()
     category = input("Get counts and totals for transactions in which category? ")
     data_adapter = db.DataAdapter()
     data_adapter.get_transaction_totals_by_category(category)
@@ -25,7 +17,7 @@ def do_totals_by_category():
 
 # no use input needed here
 def do_totals_by_state():
-    clear_screen()
+    ut.clear_screen()
     # get the desired state
     state = input("Get transactions totals for which state (postal code)? ")
 
@@ -40,7 +32,7 @@ def do_totals_by_state():
 
 # just need the ssn for this
 def do_update_customer_details():
-    clear_screen()
+    ut.clear_screen()
     ssn = ut.get_integer("Update the details of which customer (SSN)? ")
     data_adapter = db.DataAdapter()
     data_adapter.update_customer_details(ssn)
@@ -49,7 +41,7 @@ def do_update_customer_details():
 # get the cc#, start time and end time and show the transactions
 # in that range
 def do_customer_transactions_date_range():
-    clear_screen()
+    ut.clear_screen()
     ccn = ut.get_integer("Enter the ssn for the transaction report: ")
     months = list(cal.month_name)
     for i, m in enumerate(months):
@@ -86,7 +78,7 @@ def do_customer_transactions_date_range():
 # and this will show customer name, transactions with categories,
 # and total for the month
 def do_generate_bill():
-    clear_screen()
+    ut.clear_screen()
     ccn = ut.get_integer("Enter the credit card number for which to generate a bill: ")
     year = ut.get_integer("Enter the year of the bill: ")
     months = list(cal.month_name)
@@ -107,7 +99,7 @@ def do_transactions_query():
     # correct format.
 
     # consider getting a list of zip from build_database()
-    clear_screen()
+    ut.clear_screen()
     zip_code = input("Enter a 5-digit ZIP code: ")
 
     while len(zip_code) != 5 or not zip_code.isnumeric():
@@ -117,7 +109,7 @@ def do_transactions_query():
     # format.
         
     # present months menu
-    clear_screen()
+    ut.clear_screen()
     print(f"Querying on ZIP code {zip_code}: ")
     months = list(cal.month_name)
     for i, m in enumerate(months):
@@ -130,7 +122,7 @@ def do_transactions_query():
         month = int(input("Invalid month.  Enter the menu number for the month you want to query: "))
         
     # get the year from user
-    clear_screen()
+    ut.clear_screen()
     year = ut.get_integer(f"{months[month]} of which year? ")
 
     # restrict year to 2018
@@ -180,7 +172,7 @@ def do_menu():
             flag = True
         else:
             input("Type Enter to continue: ")
-        clear_screen()
+        ut.clear_screen()
 
         # use the dict created above to present the options
         print("Tasks Menu")

@@ -1,3 +1,5 @@
+from os import system, name
+
 # created finally to modularize turning month, day, year into 
 # "TIMEID" need to go back and factor to use in all places needed
 def make_timeid(year, month, day):
@@ -19,3 +21,10 @@ def get_integer(prompt):
     except Exception:
         print(f"Some other error occured. Exiting ...")
         exit()
+
+# make clear screen platform agnostic-ish
+def clear_screen():
+    if name == 'nt':
+        system('cls')
+    else:
+        system('clear')

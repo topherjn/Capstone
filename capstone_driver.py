@@ -1,7 +1,9 @@
 from build_database import build_database
 from menu import do_menu
+import utils as ut
 
 # create the database from the json files, including online
+ut.clear_screen()
 response = input("Do you wish to rebuild the database? (Y/N) ")
 
 # rebuilding the database every run can be tedious ...
