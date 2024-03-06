@@ -44,10 +44,11 @@ The primary purpose of including the load application data was to serve as a way
 #### Data Analysis and Visualization
 
 In preparation for analysis, the data in the MySQL RDBMS tables was extracted into CSV files:
-[branch table](./data/branch_table.csv)
-[credit card table](./data/credit_card_table.csv)
-[customer table](./data/customer_table.csv)
-[loan table](./data/loan_table.csv)
+
+* [branch table](./data/branch_table.csv)
+* [credit card table](./data/credit_card_table.csv)
+* [customer table](./data/customer_table.csv)
+* [loan table](./data/loan_table.csv)
 
 Using Microsoft [Power BI](https://www.microsoft.com/en-us/power-platform/products/power-bi/), we conducted several analyses of the data:
 
