@@ -11,6 +11,7 @@ DATABASE_NAME = "creditcard_capstone"
 BRANCH_TABLE = "CDW_SAPP_BRANCH"
 CC_TABLE = "CDW_SAPP_CREDIT_CARD"
 CUSTOMER_TABLE = "CDW_SAPP_CUSTOMER"
+
 LOAN_TABLE = "CDW_SAPP_loan_application"
 
 # spark constants
@@ -21,3 +22,6 @@ JSON_FORMAT = """org.apache.spark.sql.json"""
 # REST data file
 LOAN_URL = "https://raw.githubusercontent.com/platformps/LoanDataset/main/loan_data.json"
 
+# state postal codes
+STATES = [ 'AL','AR','CA','CT','FL','GA','IA','IL','IN','KY','MA','MD','MI',
+          'MN','MS','MT','NC','NJ','NY','OH','PA','SC','TX','VA','WA','WI']

@@ -3,6 +3,7 @@ from os import system, name
 import findspark
 from build_database import build_database
 import dbadapter as db
+import constants as const
 import utils as ut
 
 findspark.init()
@@ -23,10 +24,18 @@ def do_totals_by_category():
     data_adapter.close()
 
 # no use input needed here
-def do_totals_by_branch():
+def do_totals_by_state():
     clear_screen()
+    # get the desired state
+    state = input("Get transactions totals for which state (postal code)? ")
+
+    # check user error
+    while state.upper() not in const.STATES:
+        print(f"No branches in {state}.")
+        state = input("Get transactions totals for which state? ")
+
     data_adapter = db.DataAdapter()
-    data_adapter.get_transaction_totals_by_branch()
+    data_adapter.get_transaction_totals_by_state(state)
     data_adapter.close() 
 
 # just need the ssn for this
@@ -157,7 +166,7 @@ def do_menu():
     options_dict = {}
     options_dict[1] = "Get a list of transactions by ZIP, month, and year"
     options_dict[2] = "Get transaction totals by category"
-    options_dict[3] = "Get transaction totals by branch"
+    options_dict[3] = "Get transaction totals for branches in a state"
     options_dict[4] = "Get customer details"
     options_dict[5] = "Update customer details"
     options_dict[6] = "Generate credit card bill"
@@ -185,7 +194,7 @@ def do_menu():
         match option:
             case 1: do_transactions_query()
             case 2: do_totals_by_category()
-            case 3: do_totals_by_branch()
+            case 3: do_totals_by_state()
             case 4: do_customer_details()
             case 5: do_update_customer_details()
             case 6: do_generate_bill()

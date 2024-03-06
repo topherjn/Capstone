@@ -320,33 +320,41 @@ class DataAdapter:
         else:
             print(f"No such category {category} in {categories} ")
 
+    # by state
+    def get_transaction_totals_by_state(self,state):
+
+        # get branch codes by state
+        df = self.get_table_data(const.BRANCH_TABLE).select('BRANCH_CODE').where(col('BRANCH_STATE')==state)
+        columns = df.select('BRANCH_CODE').collect()
+
+        sum_counts = sum_totals = 0
+
+        branch_codes = [row["BRANCH_CODE"] for row in columns]
+
+        for branch_code in branch_codes:
+            count, total = self.get_transaction_totals_by_branch(branch_code)
+    
     # one branch per city, so using that to calculate 
     # transaction totals
-    def get_transaction_totals_by_branch(self):
+    def get_transaction_totals_by_branch(self,branch_code):
+
         df = self.get_table_data(const.BRANCH_TABLE)
-        df = df.select("BRANCH_CITY","BRANCH_CODE")
-        
-        cities = []
-        for item in df.select('BRANCH_CITY').collect():
-            cities.append(item[0].upper())
+        df = df.select("BRANCH_CODE")
         
         df = df.join(self.get_table_data(const.CC_TABLE), on='BRANCH_CODE')
-        city = input("Enter branch city for transaction totals: ")
-        
         # this error-checks input for branches that don't exist
         # upper replace catches multi-word cities we weren't asked
         # to map
-        city_matcher = city.replace(' ','').upper()
        
-        if city_matcher in cities:
-            df = df.where(col('BRANCH_CITY') == city_matcher)
-            count = df.count()
-            total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
-            print(f"Total value of {count} transactions from {city} branch: ")
-            print(round(float(total['sum(TRANSACTION_VALUE)']),2))
-        else: 
-            print(f"No branch in {city}")
-        
+        # get totals
+        df = df.where(col('BRANCH_CODE') == branch_code)
+        count = df.count()
+        total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
+
+        print(count, total)
+
+        return(count,total)
+  
     def close(self):
         self.session.stop()
 
