@@ -177,11 +177,18 @@ class DataAdapter:
         combined_df = combined_df.join(branch_df, on='BRANCH_CODE')
 
         # apply the selection criteria to the join
-        combined_df = combined_df \
-                            .where(  (col("TIMEID")
-                            .substr(0,6) == str(year)+str(month)
-                            .rjust(2,'0')) & (col("CUST_ZIP")==str(zip_code)
-                            .rjust(5,'0')))
+        combined_df = combined_df.select('TRANSACTION_ID',
+                                         'TRANSACTION_VALUE',
+                                         'CREDIT_CARD_NO',
+                                         'SSN',
+                                         'CUST_ZIP',
+                                         'BRANCH_CITY',
+                                         'BRANCH_STATE',
+                                         'BRANCH_ZIP',
+                                         'TIMEID').where((col("TIMEID")
+                                                        .substr(0,6) == str(year)+str(month)
+                                                        .rjust(2,'0')) & (col("CUST_ZIP")==str(zip_code)
+                                                        .rjust(5,'0')))
         
         # sort
         combined_df = combined_df.sort("TIMEID",ascending=False)
