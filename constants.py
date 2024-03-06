@@ -25,3 +25,6 @@ LOAN_URL = "https://raw.githubusercontent.com/platformps/LoanDataset/main/loan_d
 # state postal codes
 STATES = [ 'AL','AR','CA','CT','FL','GA','IA','IL','IN','KY','MA','MD','MI',
           'MN','MS','MT','NC','NJ','NY','OH','PA','SC','TX','VA','WA','WI']
+
+STATE_NAMES = {'AL': 'Alabama', 'AR': 'Arkansas', 'CA': 'California', 'CT': 'Connecticut', 'FL': 'Florida', 'GA': 'Georgia', 'IA': 'Iowa', 'IL': 'Illinois', 'IN': 'Indiana', 'KY': 'Kentucky', 'MA': 'Massachusetts', 'MD': 'Maryland', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MT': 'Montana', 'NC': 'North Carolina', 'NJ': 'New Jersey', 'NY': 'New York', 'OH': 'Ohio', 'PA': 'Pennsylvania', 'SC': 'South Carolina', 'TX': 'Texas', 'VA': 'Virginia', 'WA':'WASHINGTON','WI': 'Wisconsin'
+}
