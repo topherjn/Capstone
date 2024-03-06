@@ -87,7 +87,6 @@ Using Microsoft [Power BI](https://www.microsoft.com/en-us/power-platform/produc
 
 ![image info](./visualizations/dashboard.png)
 
-
 ### Conclusion
 
 The value of this Capstone was its ability to call into action the most important knowledge and skill we learned in this course.  In order to accomplish all the tasks necessary it was necessarly to put to test our skills in Python, SQL, PySpark, and Power BI, not just indivdually, but in concert with each other.  The procedure from the inintial collection of data, cleansing that data, and figuring out how to find and present insight in it has given me an appreciation of the steps necessary to effictively work with data for any contexts and purposes.
