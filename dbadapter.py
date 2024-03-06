@@ -298,11 +298,14 @@ class DataAdapter:
         
         df = df.join(self.get_table_data(const.CC_TABLE), on='BRANCH_CODE')
         city = input("Enter branch city for transaction totals: ")
-        city = city.upper()
         
         # this error-checks input for branches that don't exist
-        if city in cities:
-            df = df.where(col('BRANCH_CITY') == city)
+        # upper replace catches multi-word cities we weren't asked
+        # to map
+        city_matcher = city.replace(' ','').upper()
+       
+        if city_matcher in cities:
+            df = df.where(col('BRANCH_CITY') == city_matcher)
             count = df.count()
             total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
             print(f"Total value of {count} transactions from {city} branch: ")
