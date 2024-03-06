@@ -49,12 +49,15 @@ def do_customer_transactions_date_range():
 
     # this could probably be modularized but not bothering because of the limited uses
     start_month = ut.get_integer("Enter the menu number for the start month in the range: ")
+
     while start_month not in range(1, 13):
         start_month = int(input("Invalid month.  Enter the menu number for the start month in the range: "))
+
     start_year = ut.get_integer(f"{months[start_month]} of which year? ")
     start_day = ut.get_integer(f"What day in {months[start_month]}? ")
 
     end_month = ut.get_integer("Enter the menu number for the end month in the range: ")
+    
     while end_month not in range(1, 13):
         end_month = int(input("Invalid month.  Enter the menu number for the end month in the range: "))
     end_year = ut.get_integer(f"{months[end_month]} of which year? ")

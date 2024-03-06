@@ -32,6 +32,9 @@ class DataAdapter:
             .appName("capstone") \
             .master("local[*]") \
             .getOrCreate()
+        
+        # turn off annoyances
+        self.session.sparkContext.setLogLevel("OFF")
 
         # store the main MySQL database here, probably not
         # needed
@@ -252,7 +255,7 @@ class DataAdapter:
         timeid = ut.make_timeid(year,month,0) + "%"
 
         # in order just to get customer name we have to join
-        query = f"SELECT * FROM {const.CC_TABLE} WHERE CREDIT_CARD_NO = {ccn}"
+        #query = f"SELECT * FROM {const.CC_TABLE} WHERE CREDIT_CARD_NO = {ccn}"
         df = self.get_table_data(const.CC_TABLE)
 
         # names for join on not same so rename one
@@ -341,22 +344,6 @@ class DataAdapter:
         self.session.stop()
 
 if __name__ == "__main__":
-    '''testing statements'''
-    # data_adapter = DataAdapter()
-
-    # data_adapter.get_specified_transactions('55044', '02', '2018')
-
-    # data_adapter.close()
-
-    data_adapter = DataAdapter()
-
-    data_adapter.generate_cc_bill('4210653349028689','01','2018')
-    # #data_adapter.update_customer_details(123451152)
-    # data_adapter.get_transaction_totals_by_category("gfdsafAs")
-
-
-    # data_adapter.generate_transaction_report(123451152,20180101,20180415)
-    
-    data_adapter.close()
+    pass
 
     
