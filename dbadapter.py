@@ -287,9 +287,9 @@ class DataAdapter:
             df.select("TIMEID","TRANSACTION_TYPE","TRANSACTION_VALUE").show(n=df.count(),truncate=False)
 
             # total bill for the month
-            print("Total charges")
+            print("Total charges: ")
             total_charges = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
-            print(round(float(total_charges['sum(TRANSACTION_VALUE)']),2))
+            print(f"${round(float(total_charges['sum(TRANSACTION_VALUE)']),2):,}")
         else:
             print("No results")
         
@@ -316,7 +316,7 @@ class DataAdapter:
             count = df.count()
             total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
             print(f"\n{count} transactions in category {category} for a total of ")
-            print(f"${round(float(total['sum(TRANSACTION_VALUE)']),2)}")
+            print(f"${round(float(total['sum(TRANSACTION_VALUE)']),2):,}\n")
         else:
             print(f"No such category {category} in {categories} ")
 
@@ -336,7 +336,7 @@ class DataAdapter:
             sum_counts += count
             sum_totals += total
 
-        print(f'The total amount for {sum_counts} transactions among all branches in {state} is ${round(sum_totals,2)}')
+        print(f'\n\nThe total amount of {sum_counts} transactions for all branches in {const.STATE_NAMES[state.upper()]} is ${round(sum_totals,2):,}\n\n')
     
     # one branch per city, so using that to calculate 
     # transaction totals
