@@ -333,6 +333,10 @@ class DataAdapter:
 
         for branch_code in branch_codes:
             count, total = self.get_transaction_totals_by_branch(branch_code)
+            sum_counts += count
+            sum_totals += total
+
+        print(f'The total amount for {sum_counts} transactions among all branches in {state} is ${round(sum_totals,2)}')
     
     # one branch per city, so using that to calculate 
     # transaction totals
@@ -351,7 +355,7 @@ class DataAdapter:
         count = df.count()
         total = df.agg({"TRANSACTION_VALUE":"sum"}).collect()[0]
 
-        print(count, total)
+        total = float(total['sum(TRANSACTION_VALUE)'])
 
         return(count,total)
   
