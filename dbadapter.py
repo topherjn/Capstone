@@ -15,11 +15,16 @@ class DataAdapter:
     def __init__(self):
 
         # data adapter has its own MySQL connector
-        self.conn = mysql.connector.connect(
-            host="localhost",
-            user=secrets.mysql_username,
-            passwd=secrets.mysql_password,
-        )
+        try:
+            self.conn = mysql.connector.connect(
+                host="localhost",
+                user=secrets.mysql_username,
+                passwd=secrets.mysql_password,
+            )
+        except mysql.connector.Error as err:
+            print(f"An error occurred: {err.msg}")
+        except Exception as e:
+            print(f"An error occurred while writing to the database: {str(e)}")
 
         # has its own pyspark session
         self.session = SparkSession \
@@ -34,31 +39,40 @@ class DataAdapter:
 
     # create the capstone db
     def create_database(self):
-        command = f"DROP DATABASE IF EXISTS {self.database_name}"
-        cursor = self.conn.cursor()
+        try:
+            command = f"DROP DATABASE IF EXISTS {self.database_name}"
+            cursor = self.conn.cursor()
 
-        # Create database
-        cursor.execute(command)
-        
-        command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
-        cursor = self.conn.cursor()
-        # Create database
-        cursor.execute(command)
+            # Create database
+            cursor.execute(command)
+            
+            command = f"CREATE DATABASE IF NOT EXISTS {self.database_name}"
+            cursor = self.conn.cursor()
+            # Create database
+            cursor.execute(command)
 
-        cursor.close()
+            cursor.close()
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
 
     # create a mysql table from a Spark dataframe
     def create_table(self, df, table_name):
 
-        # print(f"{const.DB_URL}/{self.database_name}")
-        df.write.format("jdbc") \
-            .mode("overwrite") \
-            .option("url", f"{const.DB_URL}/{self.database_name}") \
-            .option("dbtable", table_name) \
-            .option("user", secrets.mysql_username) \
-            .option("driver", const.DB_DRIVER) \
-            .option("password", secrets.mysql_password) \
-            .save()
+        try:
+            # print(f"{const.DB_URL}/{self.database_name}")
+            df.write.format("jdbc") \
+                .mode("overwrite") \
+                .option("url", f"{const.DB_URL}/{self.database_name}") \
+                .option("dbtable", table_name) \
+                .option("user", secrets.mysql_username) \
+                .option("driver", const.DB_DRIVER) \
+                .option("password", secrets.mysql_password) \
+                .save()
+        except mysql.connector.Error as err:
+            print(f"An error occurred: {err.msg}")
+        except Exception as e:
+            print(f"An error occurred while writing to the database: {str(e)}")
+
     
     # convert Spark types to MySQL types
     def map_data_types(self):
@@ -68,63 +82,68 @@ class DataAdapter:
         # the a list of column names for each table
         # default is varchar
         # then change specific ones
-        cursor = self.conn.cursor()
+        try:
+            cursor = self.conn.cursor()
 
-        command = "SELECT table_name,column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS where table_schema = 'creditcard_capstone'"
-        cursor.execute(command)
-        columns = cursor.fetchall()
-        
-        command = f"USE {const.DATABASE_NAME}"
-        cursor.execute(command)
-        for column in columns:
-            data_type = ''
-            if column[2] in ["bigint","text"]:
-                if column[1] == "LAST_UPDATED":
-                    data_type = "TIMESTAMP"
-                elif column[2] == 'bigint':
-                    data_type = 'int'
-                elif column[2] == 'text':
-                    data_type = 'varchar(255)'
-
-                command = f"alter table {column[0]} modify {column[1]} {data_type}"
-
-                #print(command)
-                cursor.execute(command)
+            command = "SELECT table_name,column_name, \
+                    data_type FROM INFORMATION_SCHEMA.COLUMNS \
+                    where table_schema = 'creditcard_capstone'"
+            cursor.execute(command)
+            columns = cursor.fetchall()
             
-        cursor.close()
+            command = f"USE {const.DATABASE_NAME}"
+            cursor.execute(command)
+            for column in columns:
+                data_type = ''
+                if column[2] in ["bigint","text"]:
+                    if column[1] == "LAST_UPDATED":
+                        data_type = "TIMESTAMP"
+                    elif column[2] == 'bigint':
+                        data_type = 'int'
+                    elif column[2] == 'text':
+                        data_type = 'varchar(255)'
+
+                    command = f"alter table {column[0]} modify {column[1]} {data_type}"
+
+                    #print(command)
+                    cursor.execute(command)
+                
+            cursor.close()
+        except mysql.connector.Error as err:
+            print(f"An error occurred: {err.msg}")
+        except Exception as e:
+            print(f"An error occurred while writing to the database: {str(e)}")
         
     # create MySQL relationships
     def add_keys(self):
 
-        # add primary keys
-        cursor = self.conn.cursor()
-        cursor.execute(f"use {const.DATABASE_NAME}")
-        command = f"alter table {const.CUSTOMER_TABLE} add primary key (ssn)"
-        cursor.execute(command)
-        command = (f"alter table {const.BRANCH_TABLE} add primary key (branch_code)")
-        cursor.execute(command)
-        command = (f"alter table {const.CC_TABLE} add primary key (transaction_id)")
+        try:
+            # add primary keys
+            cursor = self.conn.cursor()
+            cursor.execute(f"use {const.DATABASE_NAME}")
 
-        cursor.execute(command)
+            # Add primary keys
+            primary_key_commands = [
+                f"alter table {const.CUSTOMER_TABLE} add primary key (ssn)",
+                f"alter table {const.BRANCH_TABLE} add primary key (branch_code)",
+                f"alter table {const.CC_TABLE} add primary key (transaction_id)"
+            ]
+            for command in primary_key_commands:
+                cursor.execute(command)
 
-        # add foreign keys - credit card table is the junction
-        # from credit card to branch
-        command = (f"alter table {const.CC_TABLE} \
-                          add constraint fk_branch \
-                          foreign key (branch_code) references \
-                          {const.BRANCH_TABLE}(branch_code)")
-        
-        cursor.execute(command)
+            # Add foreign keys
+            foreign_key_commands = [
+                f"alter table {const.CC_TABLE} add constraint fk_branch foreign key (branch_code) references {const.BRANCH_TABLE}(branch_code)",
+                f"alter table {const.CC_TABLE} add constraint fk_cust foreign key (cust_ssn) references {const.CUSTOMER_TABLE}(ssn)"
+            ]
+            for command in foreign_key_commands:
+                cursor.execute(command)
 
-        # from credit card to customer
-        command = (f"alter table {const.CC_TABLE} \
-                     add constraint fk_cust \
-                     foreign key (cust_ssn) references \
-                     {const.CUSTOMER_TABLE}(ssn)")
-        
-        cursor.execute(command)
-
-        cursor.close()
+            cursor.close()
+        except mysql.connector.Error as err:
+            print(f"An error occurred: {err.msg}")
+        except Exception as e:
+            print(f"An error occurred while writing to the database: {str(e)}")
 
     # return a Spark dataframe from a mysql table
     def get_table_data(self, table):
@@ -177,14 +196,19 @@ class DataAdapter:
     # 2) Used to modify the existing account details of a customer.
     def update_customer_record(self, field, val, ssn):
 
-        cursor = self.conn.cursor()
-        cursor.execute(f"use {const.DATABASE_NAME}")
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(f"use {const.DATABASE_NAME}")
 
-        command = f"UPDATE {const.CUSTOMER_TABLE} SET {field}='{val}',LAST_UPDATED=NOW() WHERE SSN='{ssn}'"
-        # print(command) for debugging
-        cursor.execute(command)
-        cursor.close()
-        self.conn.commit()
+            command = f"UPDATE {const.CUSTOMER_TABLE} SET {field}='{val}',LAST_UPDATED=NOW() WHERE SSN='{ssn}'"
+            # print(command) for debugging
+            cursor.execute(command)
+            cursor.close()
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            print(f"An error occurred: {err.msg}")
+        except Exception as e:
+            print(f"An error occurred while writing to the database: {str(e)}")
 
     # before you change details you read them
     # creates an update statement from user interaction
