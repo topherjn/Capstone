@@ -37,7 +37,7 @@ The menu module contains methods to execute each option.  There is also a [utili
 
 #### Functional Requirements - Loan Application Dataset
 
-Loan application data were also provided in the form of a RESTful JSON Web service [endpoint](https://raw.githubusercontent.com/platformps/LoanDataset/main/loan_data.json).  These data were read into the application by slightly tweaking the [JSON reader](./cdw_data_reader.py) module mentioned earlier.  From there, the process of transforming and writing the data to the MySQL RDBMS were essentially the same as used on the credit-card data.
+Loan application data were also provided in the form of a RESTful JSON Web service [endpoint](https://raw.githubusercontent.com/platformps/LoanDataset/main/loan_data.json).  These data were read into the application by slightly tweaking the [JSON reader](./cdw_data_reader.py) module mentioned earlier.  From there, the process of transforming and writing the data to the MySQL RDBMS is essentially the same as used on the credit-card data.
 
 The primary purpose of including the load application data was to serve as a way to showcase visualizations as seen in the next section.
 
