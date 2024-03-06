@@ -5,7 +5,7 @@
 
 ### Summary of Jira Sprints
 
-In the [Jira sprints](./Jira/) we learned how to implement Scrum methodology and use the Jira tool while practicing the concepts we learned in the accompanying module. For instance, we started a sprint, assigned issues to ourselves, wrote SQL scripts to address said issues, and closed the sprint with the appropriate documentation of our work done.
+In the [Jira sprints](./Jira/) we learned how to implement Scrum methodology and use the Jira tool while practicing the concepts we learned in the accompanying module. For instance, we started a sprint, assigned issues to ourselves, created SQL scripts, Python code, and other solutions to address said issues, and closed the sprint with the appropriate documentation of our work done.
 
 ### Core Capstone Components
 
